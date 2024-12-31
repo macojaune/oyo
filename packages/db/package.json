@@ -1,5 +1,5 @@
 {
-  "name": "@acme/db",
+  "name": "@oyo/db",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -24,26 +24,28 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
+    "generate": "pnpm with-env drizzle-kit generate",
     "push": "pnpm with-env drizzle-kit push",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@libsql/client": "^0.14.0",
     "@vercel/postgres": "^0.10.0",
     "drizzle-orm": "^0.36.4",
     "drizzle-zod": "^0.5.1",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@oyo/eslint-config": "workspace:*",
+    "@oyo/prettier-config": "workspace:*",
+    "@oyo/tsconfig": "workspace:*",
     "dotenv-cli": "^7.4.4",
     "drizzle-kit": "^0.28.1",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@oyo/prettier-config"
 }

@@ -1,10 +1,9 @@
+import type { AppRouter } from "@oyo/api";
 import { cache } from "react";
 import { headers } from "next/headers";
+import { createCaller, createTRPCContext } from "@oyo/api";
+import { auth } from "@oyo/auth";
 import { createHydrationHelpers } from "@trpc/react-query/rsc";
-
-import type { AppRouter } from "@acme/api";
-import { createCaller, createTRPCContext } from "@acme/api";
-import { auth } from "@acme/auth";
 
 import { createQueryClient } from "./query-client";
 

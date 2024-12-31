@@ -1,5 +1,5 @@
 {
-  "name": "@acme/auth-proxy",
+  "name": "@oyo/auth-proxy",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,10 +13,10 @@
     "@auth/core": "0.37.2"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tailwind-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@oyo/eslint-config": "workspace:*",
+    "@oyo/prettier-config": "workspace:*",
+    "@oyo/tailwind-config": "workspace:*",
+    "@oyo/tsconfig": "workspace:*",
     "@types/node": "^20.17.7",
     "eslint": "catalog:",
     "h3": "^1.13.0",
@@ -24,5 +24,5 @@
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@oyo/prettier-config"
 }

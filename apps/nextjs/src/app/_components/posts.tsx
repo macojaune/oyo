@@ -1,9 +1,9 @@
 "use client";
 
-import type { RouterOutputs } from "@acme/api";
-import { CreatePostSchema } from "@acme/db/schema";
-import { cn } from "@acme/ui";
-import { Button } from "@acme/ui/button";
+import type { RouterOutputs } from "@oyo/api";
+import { CreatePostSchema } from "@oyo/db/schema";
+import { cn } from "@oyo/ui";
+import { Button } from "@oyo/ui/button";
 import {
   Form,
   FormControl,
@@ -11,9 +11,9 @@ import {
   FormItem,
   FormMessage,
   useForm,
-} from "@acme/ui/form";
-import { Input } from "@acme/ui/input";
-import { toast } from "@acme/ui/toast";
+} from "@oyo/ui/form";
+import { Input } from "@oyo/ui/input";
+import { toast } from "@oyo/ui/toast";
 
 import { api } from "~/trpc/react";
 

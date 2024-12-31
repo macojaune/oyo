@@ -1,16 +1,24 @@
 import { relations, sql } from "drizzle-orm";
-import { pgTable, primaryKey } from "drizzle-orm/pg-core";
+import {
+  sqliteTable,
+  primaryKey,
+  int,
+  text,
+  index,
+} from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const Post = pgTable("post", (t) => ({
-  id: t.uuid().notNull().primaryKey().defaultRandom(),
-  title: t.varchar({ length: 256 }).notNull(),
-  content: t.text().notNull(),
-  createdAt: t.timestamp().defaultNow().notNull(),
-  updatedAt: t
-    .timestamp({ mode: "date", withTimezone: true })
-    .$onUpdateFn(() => sql`now()`),
+export const Post = sqliteTable("post", (t) => ({
+  id: int("id").notNull().primaryKey(),
+  title: text("title", { length: 255 }).notNull(),
+  content: text().notNull(),
+  createdAt: int("createdAt", {
+    mode: "timestamp",
+  }),
+  updatedAt: int("updatedAt", {
+    mode: "timestamp",
+  }).default(sql`(unixepoch())`),
 }));
 
 export const CreatePostSchema = createInsertSchema(Post, {
@@ -22,59 +30,63 @@ export const CreatePostSchema = createInsertSchema(Post, {
   updatedAt: true,
 });
 
-export const User = pgTable("user", (t) => ({
-  id: t.uuid().notNull().primaryKey().defaultRandom(),
-  name: t.varchar({ length: 255 }),
-  email: t.varchar({ length: 255 }).notNull(),
-  emailVerified: t.timestamp({ mode: "date", withTimezone: true }),
-  image: t.varchar({ length: 255 }),
-}));
+export const User = sqliteTable("user", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name", { length: 255 }),
+  email: text("email", { length: 255 }).notNull(),
+  emailVerified: int("emailVerified", {
+    mode: "timestamp",
+  }).default(sql`(unixepoch())`),
+  image: text("image", { length: 255 }),
+});
 
-export const UserRelations = relations(User, ({ many }) => ({
+export const UsersRelations = relations(User, ({ many }) => ({
   accounts: many(Account),
 }));
 
-export const Account = pgTable(
+export const Account = sqliteTable(
   "account",
-  (t) => ({
-    userId: t
-      .uuid()
+  {
+    userId: text("userId", { length: 255 })
       .notNull()
-      .references(() => User.id, { onDelete: "cascade" }),
-    type: t
-      .varchar({ length: 255 })
-      .$type<"email" | "oauth" | "oidc" | "webauthn">()
+      .references(() => User.id),
+    type: text("type", { length: 255 })
+      .$type<AdapterAccount["type"]>()
       .notNull(),
-    provider: t.varchar({ length: 255 }).notNull(),
-    providerAccountId: t.varchar({ length: 255 }).notNull(),
-    refresh_token: t.varchar({ length: 255 }),
-    access_token: t.text(),
-    expires_at: t.integer(),
-    token_type: t.varchar({ length: 255 }),
-    scope: t.varchar({ length: 255 }),
-    id_token: t.text(),
-    session_state: t.varchar({ length: 255 }),
-  }),
+    provider: text("provider", { length: 255 }).notNull(),
+    providerAccountId: text("providerAccountId", { length: 255 }).notNull(),
+    refresh_token: text("refreshToken"),
+    access_token: text("accessToken"),
+    expires_at: int("expiresAt"),
+    token_type: text("tokenType", { length: 255 }),
+    scope: text("scope", { length: 255 }),
+    id_token: text("idToken"),
+    session_state: text("sessionState", { length: 255 }),
+  },
   (account) => ({
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
+    userIdIdx: index("account_user_id_idx").on(account.userId),
   }),
 );
-
 export const AccountRelations = relations(Account, ({ one }) => ({
   user: one(User, { fields: [Account.userId], references: [User.id] }),
 }));
 
-export const Session = pgTable("session", (t) => ({
-  sessionToken: t.varchar({ length: 255 }).notNull().primaryKey(),
-  userId: t
-    .uuid()
-    .notNull()
-    .references(() => User.id, { onDelete: "cascade" }),
-  expires: t.timestamp({ mode: "date", withTimezone: true }).notNull(),
-}));
-
+export const Session = sqliteTable(
+  "session",
+  {
+    sessionToken: text("sessionToken", { length: 255 }).notNull().primaryKey(),
+    userId: text("userId", { length: 255 })
+      .notNull()
+      .references(() => User.id),
+    expires: int("expires", { mode: "timestamp" }).notNull(),
+  },
+  (session) => ({
+    userIdIdx: index("session_userId_idx").on(session.userId),
+  }),
+);
 export const SessionRelations = relations(Session, ({ one }) => ({
   user: one(User, { fields: [Session.userId], references: [User.id] }),
 }));
