@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { useMutation, useQuery } from "convex/react"
+import { useMutation } from "convex/react"
 import { Loader2 } from "lucide-react"
 
-import { api as convexApi, Doc, Id } from "@oyo/convex"
+import { api } from "@oyo/convex"
 import { Button } from "@oyo/ui/button"
 import {
   Dialog,
@@ -12,43 +12,38 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@oyo/ui/dialog"
+import { Input } from "@oyo/ui/input"
 import { Label } from "@oyo/ui/label"
 import { toast } from "@oyo/ui/toast"
 
-import { GroupCombobox } from "../groups-combobox"
-
-interface AddPositionDialogProps {
+interface AddGroupDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  position?: GeolocationPosition
-  groups: Doc<"groups">[]
+  onSuccess?: () => void
 }
 
-export function AddPositionDialog({
+export function AddGroupDialog({
   open,
   onOpenChange,
-  position,
-}: AddPositionDialogProps) {
+  onSuccess,
+}: AddGroupDialogProps) {
+  const [title, setTitle] = useState("")
   const [isSubmitting, setSubmitting] = useState(false)
-  const [selectedGroup, setSelectedGroup] = useState<Id<"groups"> | null>(null)
-  const groups = useQuery(convexApi.groups.get)
-  const doSendPosition = useMutation(convexApi.positions.sendPosition)
+  const createGroup = useMutation(api.groups.create)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!position || !selectedGroup) return
+    if (!title.trim()) return
 
     setSubmitting(true)
     try {
-      await doSendPosition({
-        groupId: selectedGroup,
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      })
-      toast.success("La position du groupe a été mise à jour avec succès.")
+      await createGroup({ title: title.trim() })
+      toast.success("Groupe créé avec succès")
+      onSuccess?.()
       onOpenChange(false)
+      setTitle("")
     } catch (error) {
-      toast.error("Une erreur est survenue lors de la mise à jour.")
+      toast.error("Erreur lors de la création du groupe")
     } finally {
       setSubmitting(false)
     }
@@ -58,15 +53,16 @@ export function AddPositionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Mettre à jour la position</DialogTitle>
+          <DialogTitle>Créer un nouveau groupe</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="group">Groupe</Label>
-            <GroupCombobox
-              groups={groups}
-              value={selectedGroup}
-              onValueChange={setSelectedGroup}
+            <Label htmlFor="title">Nom du groupe</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ex: Les Matadors"
             />
           </div>
 
@@ -82,7 +78,7 @@ export function AddPositionDialog({
               {isSubmitting && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Mettre à jour
+              Créer
             </Button>
           </div>
         </form>

@@ -45,11 +45,10 @@ export const sendPosition = mutation({
     longitude: v.number(),
   },
   handler: async (ctx, { groupId, latitude, longitude }) => {
-    const newTaskId = await ctx.db.insert("positions", {
+    return await ctx.db.insert("positions", {
       group: groupId,
       latitude,
       longitude,
     })
-    return newTaskId
   },
 })
