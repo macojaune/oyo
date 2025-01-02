@@ -41,7 +41,6 @@ export default function MapPage() {
             selectedGroup={selectedGroup}
             onGroupSelect={toggleSelectedGroup}
           />
-          <AddPositionButton position={position} />
         </main>
       </div>
     </div>

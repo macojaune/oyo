@@ -1,7 +1,7 @@
 import { v } from "convex/values"
 
 import type { Doc, Id } from "./_generated/dataModel"
-import { query } from "./_generated/server"
+import { mutation, query } from "./_generated/server"
 
 export const byId = query({
   args: { groupId: v.id("groups") },
@@ -35,5 +35,21 @@ export const byGroups = query({
     }
 
     return result
+  },
+})
+
+export const sendPosition = mutation({
+  args: {
+    groupId: v.id("groups"),
+    latitude: v.number(),
+    longitude: v.number(),
+  },
+  handler: async (ctx, { groupId, latitude, longitude }) => {
+    const newTaskId = await ctx.db.insert("positions", {
+      group: groupId,
+      latitude,
+      longitude,
+    })
+    return newTaskId
   },
 })

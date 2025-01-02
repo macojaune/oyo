@@ -95,5 +95,5 @@ export default function MapComponent({
   // Handle route display
   useMapRoute(map.current, selectedGroup, groups)
 
-  return <div ref={mapContainer} className="z-5 h-full w-full" />
+  return <div ref={mapContainer} className="h-full w-full" />
 }

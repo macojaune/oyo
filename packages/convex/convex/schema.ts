@@ -7,10 +7,10 @@ export default defineSchema({
     longitude: v.number(),
     latitude: v.number(),
     group: v.id("groups"),
-    owner: v.id("users"),
-  }).index("by_group",['group']),
+    owner: v.optional(v.id("users")),
+  }).index("by_group", ["group"]),
   users: defineTable({
     username: v.string(),
-    fromApp: v.boolean()
+    fromApp: v.boolean(),
   }),
 })
