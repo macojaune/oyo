@@ -33,6 +33,7 @@
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "@vercel/postgres": "^0.10.0",
+    "convex": "^1.17.4",
     "drizzle-orm": "^0.36.4",
     "drizzle-zod": "^0.5.1",
     "zod": "catalog:"

@@ -16,6 +16,7 @@
   "dependencies": {
     "@oyo/api": "workspace:*",
     "@oyo/auth": "workspace:*",
+    "@oyo/convex": "workspace:*",
     "@oyo/db": "workspace:*",
     "@oyo/ui": "workspace:*",
     "@oyo/validators": "workspace:*",
@@ -24,6 +25,7 @@
     "@trpc/client": "catalog:",
     "@trpc/react-query": "catalog:",
     "@trpc/server": "catalog:",
+    "convex": "^1.17.4",
     "date-fns": "latest",
     "geist": "^1.3.1",
     "lucide-react": "^0.469.0",
