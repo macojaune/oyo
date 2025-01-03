@@ -9,16 +9,15 @@ import { Button } from "@oyo/ui/button"
 
 import { calculateDistance } from "~/lib/geo-utils"
 import { type Group } from "~/lib/map-utils"
+import { AddGroupDialog } from "../add-group-dialog"
 import { AddPositionDialog } from "./add-position-dialog"
 
-interface AddPositionButtonProps {
-  position?: GeolocationPosition
-}
-
-export function AddPositionButton({ position }: AddPositionButtonProps) {
+export function AddPositionButton() {
   const [isDialogOpen, setDialogOpen] = useState(false)
-  const [nearbyGroups, setNearbyGroups] = useState<any[]>([])
-  const groups = useQuery(convexApi.groups.get)
+  const [isGroupDialogOpen, setGroupDialogOpen] = useState(false)
+  const [selectedGroup, setSelectedGroup] = useState<Id<"groups"> | null>(null)
+
+  // const [nearbyGroups, setNearbyGroups] = useState<any[]>([])
   // const groups = useQuery(convexApi.positions.byGroups) as Record<
   //   Id<"groups">,
   //   Group
@@ -53,10 +52,22 @@ export function AddPositionButton({ position }: AddPositionButtonProps) {
       </Button>
 
       <AddPositionDialog
-        open={isDialogOpen}
+        isOpen={isDialogOpen}
         onOpenChange={setDialogOpen}
-        position={position}
-        groups={groups}
+        openAddGroupDialog={() => {
+          setGroupDialogOpen(true)
+        }}
+        selectedGroup={selectedGroup}
+        setSelectedGroup={setSelectedGroup}
+      />
+      <AddGroupDialog
+        isOpen={isGroupDialogOpen}
+        onOpenChange={setGroupDialogOpen}
+        onSuccess={(groupId: Id<"groups">) => {
+          setSelectedGroup(groupId)
+          setDialogOpen(true)
+          setGroupDialogOpen(false)
+        }}
       />
     </>
   )

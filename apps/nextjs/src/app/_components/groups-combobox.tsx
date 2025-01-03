@@ -1,9 +1,9 @@
 "use client"
 
-import * as React from "react"
+import { useState } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 
-import { Doc } from "@oyo/convex"
+import type { Doc, Id } from "@oyo/convex"
 import { cn } from "@oyo/ui"
 import { Button } from "@oyo/ui/button"
 import {
@@ -20,34 +20,37 @@ import { AddGroupDialog } from "./add-group-dialog"
 
 export function GroupCombobox({
   groups,
-  selectedGroup: value,
+  selectedGroup,
   onValueChange,
 }: {
   groups: Doc<"groups">[]
+  selectedGroup: Id<"groups"> | null
+  onValueChange: (groupId: Id<"groups">) => void
 }) {
-  const [open, setOpen] = React.useState(false)
-  const [openAddDialog, setShowAddDialog] = React.useState(false)
+  const [isOpen, setOpen] = useState(false)
+  const [openAddDialog, setShowAddDialog] = useState(false)
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={isOpen} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             role="combobox"
-            aria-expanded={open}
+            aria-expanded={isOpen}
             className="w-full justify-between"
           >
-            {value
-              ? groups.find((d) => d._id === value)?.title
+            {selectedGroup
+              ? groups.find((d) => d._id === selectedGroup)?.title
               : "Selectionne un groupe..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-0">
+        <PopoverContent className="w-96 p-0">
           <Command>
             <CommandInput placeholder="Trouver un groupe..." />
-            <CommandList>
+
+            <CommandList className="z-50">
               <CommandEmpty>
                 Aucun groupe trouvé.
                 <Button
@@ -66,14 +69,16 @@ export function GroupCombobox({
                     key={group._id}
                     value={group._id}
                     onSelect={(currentValue) => {
-                      onValueChange(currentValue)
+                      onValueChange(currentValue as Id<"groups">)
                       setOpen(false)
                     }}
                   >
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        value === group._id ? "opacity-100" : "opacity-0",
+                        selectedGroup === group._id
+                          ? "opacity-100"
+                          : "opacity-0",
                       )}
                     />
                     {group.title}
@@ -87,7 +92,8 @@ export function GroupCombobox({
       <AddGroupDialog
         open={openAddDialog}
         onOpenChange={setShowAddDialog}
-        onSuccess={() => {
+        onSuccess={(groupId: Id<"groups">) => {
+          onValueChange(groupId)
           setOpen(true)
         }}
       />

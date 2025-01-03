@@ -19,7 +19,7 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
 interface MapComponentProps {
   userPosition?: GeolocationPosition
-  selectedGroup?: Id<"groups"> | null
+  selectedGroup: Id<"groups"> | null
   onGroupSelect: (groupId: Id<"groups">) => void
 }
 
@@ -78,13 +78,18 @@ export default function MapComponent({
 
         popup.on("open", () => onGroupSelect(group._id))
         popup.on("close", () => onGroupSelect(group._id))
-
+        const element = document.createElement("div")
+        element.innerHTML = `
+  <div class="bg-purple-500 p-2  before:w-4 before:h-4 before:rotate-45 before:bg-purple-500 before:absolute before:z-[-1] before:-bottom-1 before:left-0  before:right-0 before:mx-auto">
+    <h3 class="font-bold">${group.title}</h3>
+  </div>`
         new mapboxgl.Marker({
           color: getMarkerColor(group),
+          element,
         })
           .setLngLat([
-            group.positions[0].latitude,
-            group.positions[0].longitude,
+            group.positions[0]?.longitude,
+            group.positions[0]?.latitude,
           ])
           .setPopup(popup)
           .addTo(map.current!)

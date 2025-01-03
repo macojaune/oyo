@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { useMutation, useQuery } from "convex/react"
 import { Loader2 } from "lucide-react"
 
@@ -9,31 +9,44 @@ import { Button } from "@oyo/ui/button"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@oyo/ui/dialog"
 import { Label } from "@oyo/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@oyo/ui/select"
 import { toast } from "@oyo/ui/toast"
 
-import { GroupCombobox } from "../groups-combobox"
+import { useGeolocation } from "~/hooks/useGeolocation"
 
 interface AddPositionDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  position?: GeolocationPosition
-  groups: Doc<"groups">[]
+  isOpen: boolean
+  onOpenChange: Dispatch<SetStateAction<boolean>>
+  openAddGroupDialog: Dispatch<SetStateAction<boolean>>
+  selectedGroup: Id<"groups"> | null
+  setSelectedGroup: Dispatch<SetStateAction<Id<"groups"> | null>>
 }
 
 export function AddPositionDialog({
-  open,
+  isOpen,
   onOpenChange,
-  position,
+  openAddGroupDialog,
+  selectedGroup,
+  setSelectedGroup,
 }: AddPositionDialogProps) {
   const [isSubmitting, setSubmitting] = useState(false)
-  const [selectedGroup, setSelectedGroup] = useState<Id<"groups"> | null>(null)
+
   const groups = useQuery(convexApi.groups.get)
   const doSendPosition = useMutation(convexApi.positions.sendPosition)
-
+  const { position } = useGeolocation()
+  
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!position || !selectedGroup) return
@@ -55,37 +68,66 @@ export function AddPositionDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen}>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Mettre à jour la position</DialogTitle>
+        <DialogHeader className="mb-8">
+          <DialogTitle>Mettre à jour la position d'un groupe</DialogTitle>
+          <DialogDescription>
+            Sélectionne le groupe à proximité pour partager sa position sur la
+            carte.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="group">Groupe</Label>
-            <GroupCombobox
-              groups={groups}
-              value={selectedGroup}
-              onValueChange={setSelectedGroup}
-            />
-          </div>
-
-          <div className="flex justify-end gap-3">
+        {/* <form onSubmit={handleSubmit} className="space-y-4"> */}
+        <div className="space-y-2">
+          <Label htmlFor="group">Groupe</Label>
+          <Select
+            value={selectedGroup ?? undefined}
+            onValueChange={setSelectedGroup}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner un groupe" />
+            </SelectTrigger>
+            <SelectContent>
+              {groups
+                ?.sort((a, b) => a.title.localeCompare(b.title))
+                .map((group) => (
+                  <SelectItem key={group._id} value={group._id}>
+                    {group.title.toUpperCase()}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
+          <p className="text-right text-sm">
+            Pas dans la liste ?{" "}
             <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={openAddGroupDialog}
+              variant="link"
+              className="ml-2 p-0"
             >
-              Annuler
+              Ajoute-le
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Mettre à jour
-            </Button>
-          </div>
-        </form>
+          </p>
+          {/* <GroupCombobox
+            groups={groups}
+            selectedGroup={selectedGroup}
+            onValueChange={setSelectedGroup}
+          /> */}
+        </div>
+
+        <DialogFooter className="mt-8 flex justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            Annuler
+          </Button>
+          <Button onClick={handleSubmit} disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Mettre à jour
+          </Button>
+        </DialogFooter>
+        {/* </form> */}
       </DialogContent>
     </Dialog>
   )

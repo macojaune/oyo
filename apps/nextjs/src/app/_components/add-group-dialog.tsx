@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useMutation } from "convex/react"
 import { Loader2 } from "lucide-react"
 
+import type { Id } from "@oyo/convex"
 import { api } from "@oyo/convex"
 import { Button } from "@oyo/ui/button"
 import {
@@ -17,13 +18,13 @@ import { Label } from "@oyo/ui/label"
 import { toast } from "@oyo/ui/toast"
 
 interface AddGroupDialogProps {
-  open: boolean
+  isOpen: boolean
   onOpenChange: (open: boolean) => void
-  onSuccess?: () => void
+  onSuccess?: (groupId: Id<"groups">) => void
 }
 
 export function AddGroupDialog({
-  open,
+  isOpen,
   onOpenChange,
   onSuccess,
 }: AddGroupDialogProps) {
@@ -37,20 +38,22 @@ export function AddGroupDialog({
 
     setSubmitting(true)
     try {
-      await createGroup({ title: title.trim() })
+      const id = await createGroup({ title: title.trim() })
+      console.log("groupcreated", id)
       toast.success("Groupe créé avec succès")
-      onSuccess?.()
+      if (onSuccess) onSuccess(id as Id<"groups">)
       onOpenChange(false)
       setTitle("")
     } catch (error) {
       toast.error("Erreur lors de la création du groupe")
+      console.log(error)
     } finally {
       setSubmitting(false)
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Créer un nouveau groupe</DialogTitle>

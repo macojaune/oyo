@@ -1,7 +1,8 @@
 "use client"
 
-import type { Map } from "mapbox-gl"
+import type { LngLat, LngLatBoundsLike, LngLatLike, Map } from "mapbox-gl"
 import { useEffect } from "react"
+import { LngLatBounds } from "mapbox-gl"
 
 import { addRouteLine, createRouteSource, Group } from "~/lib/map-utils"
 
@@ -40,7 +41,17 @@ export function useMapRoute(
     }
 
     // Optional: Center map on route
-    // const coordinates = group.positions.map(pos => [pos.latitude, pos.longitude])
-    // map.fitBounds(coordinates, { padding: 50 })
+    const coordinates = group.positions.map((pos) => [
+      pos.longitude,
+      pos.latitude,
+    ])
+    const bounds = new LngLatBounds(coordinates[0], coordinates[0])
+
+    for (const coord of coordinates) {
+      bounds.extend(coord)
+    }
+    map.fitBounds(bounds, {
+      padding: 50,
+    })
   }, [map, selectedGroup, groups])
 }

@@ -1,6 +1,6 @@
-import type { GeoJSONSource, Map } from "mapbox-gl"
+import type { Map } from "mapbox-gl"
 
-import type { Doc, Id } from "@oyo/convex"
+import type { Doc } from "@oyo/convex"
 
 export type Group = Doc<"groups"> & { positions: Doc<"positions">[] }
 
@@ -13,8 +13,8 @@ export function createRouteSource(group: Group) {
       properties: {},
       geometry: {
         coordinates: group.positions.map((pos) => [
-          pos.latitude,
           pos.longitude,
+          pos.latitude,
         ]),
         type: "LineString",
       },
@@ -22,7 +22,7 @@ export function createRouteSource(group: Group) {
   }
 }
 
-export function addRouteLine(map: Map, lineBaseWidth: number = 14) {
+export function addRouteLine(map: Map, lineBaseWidth = 14) {
   map.addLayer({
     id: "route-line",
     type: "line",

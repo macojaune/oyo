@@ -3,9 +3,8 @@
 import { useState } from "react"
 import dynamic from "next/dynamic"
 
-import { Id } from "@oyo/convex"
+import type { Id } from "@oyo/convex"
 
-import { AddPositionButton } from "../_components/map/add-position-button"
 import { NavigationBar } from "../_components/map/navigation-bar"
 import { Sidebar } from "../_components/map/sidebar"
 import { useGeolocation } from "../../hooks/useGeolocation"

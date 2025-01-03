@@ -8,7 +8,6 @@ import { api as convexApi } from "@oyo/convex"
 import { Button } from "@oyo/ui/button"
 import { ScrollArea } from "@oyo/ui/scroll-area"
 
-import { useGeolocation } from "~/hooks/useGeolocation"
 import { AddPositionButton } from "./add-position-button"
 import { GroupCard } from "./group-card"
 
@@ -26,7 +25,6 @@ export function Sidebar({
   onGroupSelect,
 }: SidebarProps) {
   const groups = useQuery(convexApi.positions.byGroups)
-  const { position } = useGeolocation()
 
   return (
     <div
@@ -47,17 +45,23 @@ export function Sidebar({
           <ScrollArea className="h-30">
             <div className="space-y-2">
               {groups &&
-                Object.values(groups).map((group) => (
-                  <GroupCard
-                    key={group._id}
-                    group={group}
-                    isSelected={group._id === selectedGroup}
-                    onClick={() => onGroupSelect(group._id)}
-                  />
-                ))}
+                Object.values(groups)
+                  .sort(
+                    (a, b) =>
+                      b.positions[0]?._creationTime -
+                      a.positions[0]?._creationTime,
+                  )
+                  .map((group) => (
+                    <GroupCard
+                      key={group._id}
+                      group={group}
+                      isSelected={group._id === selectedGroup}
+                      onClick={() => onGroupSelect(group._id)}
+                    />
+                  ))}
             </div>
           </ScrollArea>
-          <AddPositionButton position={position} />
+          <AddPositionButton />
         </div>
       )}
     </div>
