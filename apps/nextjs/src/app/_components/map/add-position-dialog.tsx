@@ -29,7 +29,7 @@ import { useGeolocation } from "~/hooks/useGeolocation"
 interface AddPositionDialogProps {
   isOpen: boolean
   onOpenChange: Dispatch<SetStateAction<boolean>>
-  openAddGroupDialog: Dispatch<SetStateAction<boolean>>
+  openAddGroupDialog: () => void
   selectedGroup: Id<"groups"> | null
   setSelectedGroup: Dispatch<SetStateAction<Id<"groups"> | null>>
 }
@@ -46,7 +46,7 @@ export function AddPositionDialog({
   const groups = useQuery(convexApi.groups.get)
   const doSendPosition = useMutation(convexApi.positions.sendPosition)
   const { position } = useGeolocation()
-  
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!position || !selectedGroup) return
@@ -68,16 +68,15 @@ export function AddPositionDialog({
   }
 
   return (
-    <Dialog open={isOpen}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader className="mb-8">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[95dvw] sm:max-w-[425px]">
+        <DialogHeader className="mb-4 text-left sm:mb-8 sm:text-center">
           <DialogTitle>Mettre à jour la position d'un groupe</DialogTitle>
           <DialogDescription>
             Sélectionne le groupe à proximité pour partager sa position sur la
             carte.
           </DialogDescription>
         </DialogHeader>
-        {/* <form onSubmit={handleSubmit} className="space-y-4"> */}
         <div className="space-y-2">
           <Label htmlFor="group">Groupe</Label>
           <Select
@@ -100,18 +99,13 @@ export function AddPositionDialog({
           <p className="text-right text-sm">
             Pas dans la liste ?{" "}
             <Button
-              onClick={openAddGroupDialog}
+              onClick={() => openAddGroupDialog()}
               variant="link"
               className="ml-2 p-0"
             >
               Ajoute-le
             </Button>
           </p>
-          {/* <GroupCombobox
-            groups={groups}
-            selectedGroup={selectedGroup}
-            onValueChange={setSelectedGroup}
-          /> */}
         </div>
 
         <DialogFooter className="mt-8 flex justify-end gap-3">

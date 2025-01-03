@@ -25,10 +25,10 @@ export function GroupCard({ group, isSelected, onClick }: GroupCardProps) {
             className="h-16 w-16 rounded-lg object-cover"
           />
         )} */}
-        <div className="min-w-0 flex-1">
+        <div className="flex flex-1 flex-row items-center justify-between lg:flex-col lg:items-start">
           <h3 className="truncate font-semibold">{group.title}</h3>
           {group.positions[0]?._creationTime && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground lg:text-sm">
               {formatDistanceToNow(
                 new Date(group.positions[0]?._creationTime),
                 {

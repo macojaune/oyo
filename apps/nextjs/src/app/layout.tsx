@@ -55,9 +55,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           <ConvexClientProvider>
             <TRPCReactProvider>{props.children}</TRPCReactProvider>
           </ConvexClientProvider>
-          <div className="absolute bottom-4 right-4">
-            <ThemeToggle />
-          </div>
           <Toaster />
         </ThemeProvider>
       </body>

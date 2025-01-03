@@ -1,36 +1,37 @@
-import { Suspense } from "react";
-
-import { api, HydrateClient } from "~/trpc/server";
-import { AuthShowcase } from "./_components/auth-showcase";
+import { Suspense } from "react"
+import Link from "next/link"
 import {
-  CreatePostForm,
-  PostCardSkeleton,
-  PostList,
-} from "./_components/posts";
-import { Button } from "@oyo/ui/button";
-import { Card } from "@oyo/ui/card";
-import Link from "next/link";
-import {
+  Bell,
+  Camera,
+  Clock,
+  Map,
   MapPin,
   Navigation,
   Share2,
-  Map,
-  Bell,
   Wifi,
-  Camera,
-  Clock,
-} from "lucide-react";
+} from "lucide-react"
+
+import { Button } from "@oyo/ui/button"
+import { Card } from "@oyo/ui/card"
+import { ThemeToggle } from "@oyo/ui/theme"
+
+import { api, HydrateClient } from "~/trpc/server"
+import { AuthShowcase } from "./_components/auth-showcase"
+import { CreatePostForm, PostCardSkeleton, PostList } from "./_components/posts"
 
 // export const runtime = "edge";
 
 export default function HomePage() {
   // You can await this here if you don't want to show Suspense fallback below
-  void api.post.all.prefetch();
+  void api.post.all.prefetch()
 
   return (
     <HydrateClient>
-      <main className=" min-h-screen">
-        <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <main className="min-h-screen">
+        {/* <div className="fixed bottom-4 right-4 z-10">
+          <ThemeToggle />
+        </div> */}
+        <section className="relative flex h-screen items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -41,17 +42,19 @@ export default function HomePage() {
             />
             <div className="absolute inset-0 bg-gradient-to-b from-purple-900/70 to-purple-900/90 backdrop-blur-sm" />
           </div>
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <span className="text-6xl md:text-8xl font-bold text-white mb-4">
+          <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
+            <span className="mb-4 text-6xl font-bold text-white md:text-8xl">
               O Mas La ?
             </span>
-            <h1 className="text-5xl md:text-7xl text-white mb-6">
+            <h1 className="mb-6 text-5xl text-white md:text-7xl">
               Suivez votre carnaval en temps réel!
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8">
+            <p className="mb-8 text-xl text-white/90 md:text-2xl">
               Ne manquez plus aucun groupe grâce à la géolocalisation en direct
             </p>
-            <Link href="/map"><Button size="lg" >Voir la carte</Button></Link>
+            <Link href="/map">
+              <Button size="lg">Voir la carte</Button>
+            </Link>
           </div>
         </section>
         <div className="flex flex-col items-center justify-center gap-4 py-16">
@@ -76,10 +79,10 @@ export default function HomePage() {
         {/* How it Works Section */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-16">
+            <h2 className="mb-16 text-center text-4xl font-bold">
               Comment ça marche ?
             </h2>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid gap-8 md:grid-cols-3">
               {[
                 {
                   icon: <MapPin className="h-12 w-12 text-purple-600" />,
@@ -102,10 +105,10 @@ export default function HomePage() {
               ].map((item, index) => (
                 <Card
                   key={index}
-                  className="p-6 text-center hover:shadow-lg transition-shadow"
+                  className="p-6 text-center transition-shadow hover:shadow-lg"
                 >
-                  <div className="flex justify-center mb-4">{item.icon}</div>
-                  <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+                  <div className="mb-4 flex justify-center">{item.icon}</div>
+                  <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
                   <p className="text-gray-400">{item.description}</p>
                 </Card>
               ))}
@@ -126,14 +129,14 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-b from-purple-900/80 to-purple-900/90 backdrop-blur-sm" />
           </div>
 
-          <div className="relative z-10 container mx-auto px-4 text-center">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-4xl font-bold mb-4">Carvanavalier·e ?</h2>
-              <p className="text-xl text-gray-600 mb-8">
+          <div className="container relative z-10 mx-auto px-4 text-center">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="mb-4 text-4xl font-bold">Carvanavalier·e ?</h2>
+              <p className="mb-8 text-xl text-gray-600">
                 Télécharge l'application et partage la position de ton groupe en
                 direct.
               </p>
-              <div className="space-y-4 mb-8">
+              <div className="mb-8 space-y-4">
                 {[
                   "Plus précis",
                   "Plus facile à utiliser",
@@ -143,7 +146,7 @@ export default function HomePage() {
                     key={index}
                     className="flex items-center justify-center gap-2"
                   >
-                    <div className="w-2 h-2 rounded-full bg-amber-500" />
+                    <div className="h-2 w-2 rounded-full bg-amber-500" />
                     <p className="text-lg text-gray-700">{benefit}</p>
                   </div>
                 ))}
@@ -156,10 +159,10 @@ export default function HomePage() {
         {/* Features Section */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center mb-16">
+            <h2 className="mb-16 text-center text-4xl font-bold">
               Fonctionnalités
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
               {[
                 { icon: <Map />, title: "Carte interactive" },
                 { icon: <Navigation />, title: "Positions en temps réel" },
@@ -169,8 +172,8 @@ export default function HomePage() {
                 { icon: <Wifi />, title: "Mode hors connexion" },
               ].map((feature, index) => (
                 <div key={index} className="text-center">
-                  <div className="flex justify-center mb-4">
-                    <div className="p-4 rounded-full bg-purple-100">
+                  <div className="mb-4 flex justify-center">
+                    <div className="rounded-full bg-purple-100 p-4">
                       {feature.icon}
                     </div>
                   </div>
@@ -182,24 +185,24 @@ export default function HomePage() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-900 text-white py-12">
-          <p className="text-center mb-8 text-lg font-mono">
+        <footer className="bg-gray-900 py-12 text-white">
+          <p className="mb-8 text-center font-mono text-lg">
             Tambouriné avec ❤️ par{" "}
             <a href="https://marvinl.com" target="_blank">
               MarvinL.com
             </a>
           </p>
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               <div>
-                <h3 className="font-semibold text-lg mb-4">Contact</h3>
+                <h3 className="mb-4 text-lg font-semibold">Contact</h3>
                 <ul className="space-y-2">
                   <li>contact@marvinl.com</li>
                   <li>+33 1 23 45 67 89</li>
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-4">Légal</h3>
+                <h3 className="mb-4 text-lg font-semibold">Légal</h3>
                 <ul className="space-y-2">
                   <li>Mentions légales</li>
                   <li>Politique de confidentialité</li>
@@ -207,7 +210,7 @@ export default function HomePage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-4">Réseaux sociaux</h3>
+                <h3 className="mb-4 text-lg font-semibold">Réseaux sociaux</h3>
                 <ul className="space-y-2">
                   <li>Facebook</li>
                   <li>Twitter</li>
@@ -215,7 +218,7 @@ export default function HomePage() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-semibold text-lg mb-4">
+                <h3 className="mb-4 text-lg font-semibold">
                   Application Carnavalier·e
                 </h3>
                 <ul className="space-y-2">
@@ -224,12 +227,12 @@ export default function HomePage() {
                 </ul>
               </div>
             </div>
-            <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+            <div className="mt-12 border-t border-gray-800 pt-8 text-center text-gray-400">
               <p>&copy; 2024 | O Mas La ? − Tous droits réservés.</p>
             </div>
           </div>
         </footer>
       </main>
     </HydrateClient>
-  );
+  )
 }

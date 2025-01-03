@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
-import mapboxgl from "mapbox-gl"
+import mapboxgl, { GeolocateControl, NavigationControl } from "mapbox-gl"
 
 import "mapbox-gl/dist/mapbox-gl.css"
 
@@ -49,6 +49,17 @@ export default function MapComponent({
       center: [-61.533329, 16.241935], // P-a-p coordinates
       zoom: 14,
     })
+      .addControl(new NavigationControl())
+      .addControl(
+        new GeolocateControl({
+          positionOptions: { enableHighAccuracy: true },
+          trackUserLocation: true,
+          showUserHeading: true,
+          showUserLocation: true,
+          showAccuracyCircle: true,
+          fitBoundsOptions: { padding: 50 },
+        }),
+      )
 
     return () => {
       map.current?.remove()
@@ -69,15 +80,15 @@ export default function MapComponent({
       )
 
       Object.values(groups).forEach((group: Group) => {
-        const popup = new mapboxgl.Popup().setHTML(`
-          <div class="p-2 bg-purple-500">
-            <h3 class="font-bold">${group.title}</h3>
-            <p class="text-sm">Dernière mise à jour: ${formatTime(group.positions[0]._creationTime)}</p>
-          </div>
-        `)
+        // const popup = new mapboxgl.Popup().setHTML(`
+        //   <div class="p-2 bg-purple-500">
+        //     <h3 class="font-bold">${group.title}</h3>
+        //     <p class="text-sm">Dernière mise à jour: ${formatTime(group.positions[0]._creationTime)}</p>
+        //   </div>
+        // `)
 
-        popup.on("open", () => onGroupSelect(group._id))
-        popup.on("close", () => onGroupSelect(group._id))
+        // popup.on("open", () => onGroupSelect(group._id))
+        // popup.on("close", () => onGroupSelect(group._id))
         const element = document.createElement("div")
         element.innerHTML = `
   <div class="bg-purple-500 p-2  before:w-4 before:h-4 before:rotate-45 before:bg-purple-500 before:absolute before:z-[-1] before:-bottom-1 before:left-0  before:right-0 before:mx-auto">
@@ -91,7 +102,7 @@ export default function MapComponent({
             group.positions[0]?.longitude,
             group.positions[0]?.latitude,
           ])
-          .setPopup(popup)
+          // .setPopup(popup)
           .addTo(map.current!)
       })
     })

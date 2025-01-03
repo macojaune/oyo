@@ -44,7 +44,7 @@ export function AddPositionButton() {
     <>
       <Button
         size="lg"
-        className="mt-auto bg-purple-600 text-white hover:bg-purple-700"
+        className="fixed bottom-0 left-0 w-full rounded-none bg-purple-600 py-8 text-white hover:bg-purple-700 lg:relative lg:mt-auto lg:w-auto lg:rounded-sm lg:py-0"
         onClick={() => setDialogOpen(true)}
       >
         <MapPin className="mr-2 h-5 w-5" />

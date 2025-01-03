@@ -28,21 +28,22 @@ export function Sidebar({
 
   return (
     <div
-      className={`relative border-r bg-background ${isOpen ? "w-80" : "w-0"} transition-all duration-300`}
+      className={`w-full border-r bg-background lg:relative ${isOpen ? "h-[45dvh] lg:w-80" : "h-0 lg:w-0"} transition-all duration-300 lg:h-full`}
     >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="z-100 absolute -right-10 top-2"
-        onClick={onToggle}
-      >
-        {isOpen ? <ChevronLeft /> : <ChevronRight />}
-      </Button>
-
       {isOpen && (
-        <div className="flex h-full flex-col p-4">
-          <h2 className="mb-4 text-xl font-bold">Groupes</h2>
-          <ScrollArea className="h-30">
+        <div className="flex h-full flex-col p-4 pb-20 lg:pb-4">
+          <div className="flex flex-row justify-between">
+            <h2 className="mb-4 text-xl font-bold">Groupes</h2>
+            {/* <Button
+              variant="ghost"
+              size="icon"
+              className="hidden lg:flex"
+              onClick={onToggle}
+            >
+              {isOpen ? <ChevronLeft /> : <ChevronRight />}
+            </Button> */}
+          </div>
+          <ScrollArea className="">
             <div className="space-y-2">
               {groups &&
                 Object.values(groups)

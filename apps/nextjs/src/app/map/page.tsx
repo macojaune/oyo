@@ -23,18 +23,20 @@ export default function MapPage() {
   }
 
   return (
-    <div className="relative h-screen w-full">
-      <NavigationBar />
+    <div className="relative h-auto w-full lg:h-screen">
+      <NavigationBar toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
 
-      <div className="flex h-[calc(100vh-4rem)]">
-        <Sidebar
-          isOpen={isSidebarOpen}
-          onToggle={() => setSidebarOpen(!isSidebarOpen)}
-          selectedGroup={selectedGroup}
-          onGroupSelect={toggleSelectedGroup}
-        />
+      <div className="flex h-[calc(100vh-4rem)] flex-col lg:flex-row">
+        <div className="order-2 lg:order-1">
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onToggle={() => setSidebarOpen(!isSidebarOpen)}
+            selectedGroup={selectedGroup}
+            onGroupSelect={toggleSelectedGroup}
+          />
+        </div>
 
-        <main className="relative flex-1">
+        <main className="relative order-1 flex-1 lg:order-2">
           <MapComponent
             userPosition={position}
             selectedGroup={selectedGroup}
