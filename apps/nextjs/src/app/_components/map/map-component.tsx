@@ -1,19 +1,31 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react"
-import mapboxgl, { GeolocateControl, NavigationControl } from "mapbox-gl"
+import { useEffect, useRef, useState } from "react";
+import mapboxgl, { GeolocateControl, Marker, NavigationControl } from "mapbox-gl";
 
-import "mapbox-gl/dist/mapbox-gl.css"
 
-import { useQuery } from "convex/react"
-import { useTheme } from "next-themes"
 
-import type { Id } from "@oyo/convex"
-import { api as convexApi } from "@oyo/convex"
 
-import type { Group } from "~/lib/map-utils"
-import { useMapRoute } from "~/hooks/useMapRoute"
-import { formatTime, getMarkerColor } from "~/lib/map-utils"
+
+
+import "mapbox-gl/dist/mapbox-gl.css";
+
+
+
+import { useQuery } from "convex/react";
+import { useTheme } from "next-themes";
+
+
+
+import type { Id } from "@oyo/convex";
+import { api as convexApi } from "@oyo/convex";
+
+
+
+import type { Group } from "~/lib/map-utils";
+import { useMapRoute } from "~/hooks/useMapRoute";
+import { formatTime, getMarkerColor } from "~/lib/map-utils";
+
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
@@ -35,6 +47,7 @@ export default function MapComponent({
     Id<"groups">,
     Group
   >
+  const [markers, setMarkers] = useState(new Map<Id<"groups">, Marker>())
 
   // Initialize map
   useEffect(() => {
@@ -69,7 +82,6 @@ export default function MapComponent({
   // Add markers and pattern
   useEffect(() => {
     if (!map.current || !groups) return
-
     map.current.on("style.load", () => {
       map.current?.loadImage(
         "https://docs.mapbox.com/mapbox-gl-js/assets/pattern-dot.png",
@@ -78,35 +90,44 @@ export default function MapComponent({
           map.current?.addImage("pattern-dot", image)
         },
       )
+    })
 
-      Object.values(groups).forEach((group: Group) => {
-        // const popup = new mapboxgl.Popup().setHTML(`
-        //   <div class="p-2 bg-purple-500">
-        //     <h3 class="font-bold">${group.title}</h3>
-        //     <p class="text-sm">Dernière mise à jour: ${formatTime(group.positions[0]._creationTime)}</p>
-        //   </div>
-        // `)
+    //remove marker
+    const m = new Map(markers)
+    m.forEach(marker=>marker.remove())
+    m.clear()
+    setMarkers(m)
+    Object.values(groups).forEach((group: Group) => {
+      // const popup = new mapboxgl.Popup().setHTML(`
+      //   <div class="p-2 bg-purple-500">
+      //     <h3 class="font-bold">${group.title}</h3>
+      //     <p class="text-sm">Dernière mise à jour: ${formatTime(group.positions[0]._creationTime)}</p>
+      //   </div>
+      // `)
 
-        // popup.on("open", () => onGroupSelect(group._id))
-        // popup.on("close", () => onGroupSelect(group._id))
-        const element = document.createElement("div")
-        element.innerHTML = `
-  <div class="bg-purple-500 p-2  before:w-4 before:h-4 before:rotate-45 before:bg-purple-500 before:absolute before:z-[-1] before:-bottom-1 before:left-0  before:right-0 before:mx-auto">
+      // popup.on("open", () => onGroupSelect(group._id))
+      // popup.on("close", () => onGroupSelect(group._id))
+      const element = document.createElement("div")
+      element.innerHTML = `
+  <div class="bg-purple-500 p-2 before:w-4 before:h-4 before:rotate-45 before:bg-purple-500 before:absolute before:z-[-1] before:-bottom-1 before:left-0  before:right-0 before:mx-auto">
     <h3 class="font-bold">${group.title}</h3>
   </div>`
-        new mapboxgl.Marker({
-          color: getMarkerColor(group),
-          element,
-        })
-          .setLngLat([
-            group.positions[0]?.longitude,
-            group.positions[0]?.latitude,
-          ])
-          // .setPopup(popup)
-          .addTo(map.current!)
+      const marker = new Marker({
+        color: getMarkerColor(group),
+        element,
       })
+        .setLngLat([
+          group.positions[0]?.longitude,
+          group.positions[0]?.latitude,
+        ])
+        // .setPopup(popup)
+        .addTo(map.current)
+
+      //add marker to list
+      m.set(group._id, marker)
+      setMarkers(m)
     })
-  }, [groups, onGroupSelect])
+  }, [groups])
 
   // Handle route display
   useMapRoute(map.current, selectedGroup, groups)
