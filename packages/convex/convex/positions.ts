@@ -15,7 +15,16 @@ export const byId = query({
 
 export const byGroups = query({
   handler: async (ctx) => {
-    const positions = await ctx.db.query("positions").order("desc").collect()
+    const positions = await ctx.db
+      .query("positions")
+      .order("desc")
+      .filter((q) =>
+        q.gte(
+          q.field("_creationTime"),
+          new Date().getTime() - 1000 * 60 * 60 * 6,
+        ),
+      )
+      .collect()
     const result: Record<
       Id<"groups">,
       Doc<"groups"> & { positions: Doc<"positions">[] }

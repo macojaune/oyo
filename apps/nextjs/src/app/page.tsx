@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import {
   Bell,
@@ -33,14 +34,21 @@ export default function HomePage() {
         </div> */}
         <section className="relative flex h-screen items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <div
+            <Image
+              src="/bg.jpeg"
+              alt="background"
+              width={2048}
+              height={1638}
+              className="object-cover object-center"
+            />
+            {/* <div
               className="absolute inset-0 bg-cover bg-center"
               style={{
                 backgroundImage:
                   'url("https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80")',
               }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/70 to-purple-900/90 backdrop-blur-sm" />
+            /> */}
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 to-purple-900/80 backdrop-blur-sm" />
           </div>
           <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
             <span className="mb-4 text-6xl font-bold text-white md:text-8xl">
@@ -53,11 +61,13 @@ export default function HomePage() {
               Ne manquez plus aucun groupe grâce à la géolocalisation en direct
             </p>
             <Link href="/map">
-              <Button size="lg">Voir la carte</Button>
+              <Button size="lg" className="text-white">
+                Voir la carte
+              </Button>
             </Link>
           </div>
         </section>
-        <div className="flex flex-col items-center justify-center gap-4 py-16">
+        {/* <div className="flex flex-col items-center justify-center gap-4 py-16">
           <AuthShowcase />
           <CreatePostForm />
           <div className="w-full max-w-2xl overflow-y-scroll">
@@ -73,7 +83,7 @@ export default function HomePage() {
               <PostList />
             </Suspense>
           </div>
-        </div>
+        </div> */}
         {/* Hero Section */}
 
         {/* How it Works Section */}
@@ -86,21 +96,21 @@ export default function HomePage() {
               {[
                 {
                   icon: <MapPin className="h-12 w-12 text-purple-600" />,
-                  title: "Trouvez vos groupes",
+                  title: "Trouve tes groupes",
                   description:
-                    "Consultez la carte interactive pour localiser tous les groupes du carnaval en temps réel",
+                    "Consulte la carte interactive pour localiser les groupes en temps réel",
                 },
                 {
                   icon: <Navigation className="h-12 w-12 text-purple-600" />,
                   title: "Suivez les déplacements",
                   description:
-                    "Sélectionnez vos groupes préférés et suivez leurs parcours en direct",
+                    "Sélectionne tes groupes préférés et suis leurs parcours endirect",
                 },
                 {
                   icon: <Share2 className="h-12 w-12 text-purple-600" />,
-                  title: "Partagez votre position",
+                  title: "Partage ta position",
                   description:
-                    "Vous êtes membre d'un groupe ? Partagez votre position pour que vos fans puissent vous suivre",
+                    "Collabore au projet en partageant la position des groupes à proximité",
                 },
               ].map((item, index) => (
                 <Card
@@ -132,11 +142,11 @@ export default function HomePage() {
           <div className="container relative z-10 mx-auto px-4 text-center">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="mb-4 text-4xl font-bold">Carvanavalier·e ?</h2>
-              <p className="mb-8 text-xl text-gray-600">
+              <p className="mb-8 text-xl text-gray-400">
                 Télécharge l'application et partage la position de ton groupe en
                 direct.
               </p>
-              <div className="mb-8 space-y-4">
+              <div className="mb-8 flex flex-col items-center justify-center space-y-4">
                 {[
                   "Plus précis",
                   "Plus facile à utiliser",
@@ -144,19 +154,21 @@ export default function HomePage() {
                 ].map((benefit, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-center gap-2"
+                    className="flex w-1/3 items-center justify-start gap-2"
                   >
                     <div className="h-2 w-2 rounded-full bg-amber-500" />
-                    <p className="text-lg text-gray-700">{benefit}</p>
+                    <p className="text-lg text-gray-500">{benefit}</p>
                   </div>
                 ))}
               </div>
-              <Button size="lg">Télécharger l'application</Button>
+              <Button size="lg" disabled className="bg-purple-500">
+                Bientôt disponible
+              </Button>
             </div>
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* {/* Features Section 
         <section className="py-20">
           <div className="container mx-auto px-4">
             <h2 className="mb-16 text-center text-4xl font-bold">
@@ -166,14 +178,10 @@ export default function HomePage() {
               {[
                 { icon: <Map />, title: "Carte interactive" },
                 { icon: <Navigation />, title: "Positions en temps réel" },
-                { icon: <Clock />, title: "Historique des parcours" },
-                { icon: <Camera />, title: "Photos des groupes" },
-                { icon: <Bell />, title: "Notifications de proximité" },
-                { icon: <Wifi />, title: "Mode hors connexion" },
               ].map((feature, index) => (
                 <div key={index} className="text-center">
                   <div className="mb-4 flex justify-center">
-                    <div className="rounded-full bg-purple-100 p-4">
+                    <div className="rounded-full bg-purple-400 p-4">
                       {feature.icon}
                     </div>
                   </div>
@@ -182,44 +190,43 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Footer */}
         <footer className="bg-gray-900 py-12 text-white">
           <p className="mb-8 text-center font-mono text-lg">
-            Tambouriné avec ❤️ par{" "}
+            Tambouriné avec ❤️ par
             <a href="https://marvinl.com" target="_blank">
-              MarvinL.com
+              <Button variant="link">MarvinL.com</Button>
             </a>
           </p>
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
               <div>
                 <h3 className="mb-4 text-lg font-semibold">Contact</h3>
                 <ul className="space-y-2">
                   <li>contact@marvinl.com</li>
-                  <li>+33 1 23 45 67 89</li>
                 </ul>
               </div>
               <div>
                 <h3 className="mb-4 text-lg font-semibold">Légal</h3>
                 <ul className="space-y-2">
-                  <li>Mentions légales</li>
-                  <li>Politique de confidentialité</li>
-                  <li>CGU</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="mb-4 text-lg font-semibold">Réseaux sociaux</h3>
-                <ul className="space-y-2">
-                  <li>Facebook</li>
-                  <li>Twitter</li>
-                  <li>Instagram</li>
+                  <li>
+                    <Link href="/mentions-legales">Mentions légales</Link>
+                  </li>
+                  <li>
+                    <Link href="/politique-de-confidentialite">
+                      Politique de confidentialité
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/cgu">CGU</Link>
+                  </li>
                 </ul>
               </div>
               <div>
                 <h3 className="mb-4 text-lg font-semibold">
-                  Application Carnavalier·e
+                  Application Carnavalier·e (à venir)
                 </h3>
                 <ul className="space-y-2">
                   <li>App Store</li>

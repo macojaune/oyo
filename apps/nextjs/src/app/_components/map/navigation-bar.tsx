@@ -11,11 +11,11 @@ import { ThemeToggle } from "@oyo/ui/theme"
 export function NavigationBar({
   toggleSidebar,
 }: {
-  toggleSidebar: () => void
+  toggleSidebar?: () => void
 }) {
   return (
     <header className="h-16 border-b bg-background">
-      <div className="container mx-auto flex h-full items-center justify-between px-4">
+      <div className="flex h-full items-center justify-between px-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon">
             <Menu className="h-5 w-5" />

@@ -60,6 +60,11 @@ export function Sidebar({
                       onClick={() => onGroupSelect(group._id)}
                     />
                   ))}
+              {groups && Object.values(groups).length === 0 && (
+                <div className="text-center text-sm text-purple-400">
+                  Aucune position ajoutée récemment.
+                </div>
+              )}
             </div>
           </ScrollArea>
           <AddPositionButton />
