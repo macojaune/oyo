@@ -62,7 +62,7 @@ export const sendPosition = mutation({
       longitude,
       fromApp,
     }
-    if (!owner) {
+    if (owner) {
       const user = await ctx.db
         .query("users")
         .filter((q) => q.eq(q.field("username"), owner))

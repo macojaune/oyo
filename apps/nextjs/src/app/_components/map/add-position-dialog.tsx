@@ -89,7 +89,8 @@ export function AddPositionDialog({
             </SelectTrigger>
             <SelectContent>
               {groups
-                ?.sort((a, b) => a.title.localeCompare(b.title))
+                ?.filter((group) => !group.isLive)
+                .sort((a, b) => a.title.localeCompare(b.title))
                 .map((group) => (
                   <SelectItem key={group._id} value={group._id}>
                     {group.title.toUpperCase()}

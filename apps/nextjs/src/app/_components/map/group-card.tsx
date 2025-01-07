@@ -1,6 +1,8 @@
+import { useQuery } from "convex/react"
 import { formatDistanceToNow } from "date-fns"
 import { fr } from "date-fns/locale"
 
+import { api as convexApi } from "@oyo/convex"
 import { Card } from "@oyo/ui/card"
 
 import type { Group } from "~/lib/map-utils"
@@ -26,7 +28,14 @@ export function GroupCard({ group, isSelected, onClick }: GroupCardProps) {
           />
         )} */}
         <div className="flex flex-1 flex-row items-center justify-between lg:flex-col lg:items-start">
-          <h3 className="truncate font-semibold">{group.title}</h3>
+          <div className="flex w-full items-center justify-between gap-2 lg:flex-row">
+            <h3 className="truncate font-semibold">{group.title}</h3>{" "}
+            {group.isLive && (
+              <span className="rounded-md border border-primary px-2 py-1 text-xs">
+                Live
+              </span>
+            )}
+          </div>
           {group.positions[0]?._creationTime && (
             <p className="text-xs text-muted-foreground lg:text-sm">
               {formatDistanceToNow(
