@@ -1,9 +1,10 @@
-import type { ConfigContext, ExpoConfig } from "expo/config";
+import type { ConfigContext, ExpoConfig } from "expo/config"
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "expo",
-  slug: "expo",
+  name: "omasla-app",
+  slug: "omasla-app",
+  owner: "marvinldotcom",
   scheme: "expo",
   version: "0.1.0",
   orientation: "portrait",
@@ -19,24 +20,55 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   assetBundlePatterns: ["**/*"],
   ios: {
-    bundleIdentifier: "your.bundle.identifier",
+    bundleIdentifier: "com.marvinl.omasla",
     supportsTablet: true,
+    infoPlist: {
+      UIBackgroundModes: ["location", "fetch"],
+      NSLocationAlwaysAndWhenInUseUsageDescription:
+        "Allow $(PRODUCT_NAME) to use your location to track your position.",
+      NSLocationAlwaysUsageDescription:
+        "Allow $(PRODUCT_NAME) to use your location in the background.",
+      NSLocationWhenInUseUsageDescription:
+        "Allow $(PRODUCT_NAME) to use your location.",
+    },
   },
   android: {
-    package: "your.bundle.identifier",
+    package: "com.marvinl.omasla",
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#1F104A",
     },
+    permissions: [
+      "ACCESS_COARSE_LOCATION",
+      "ACCESS_FINE_LOCATION",
+      "ACCESS_BACKGROUND_LOCATION",
+      "FOREGROUND_SERVICE",
+      "WAKE_LOCK",
+    ],
   },
-  // extra: {
-  //   eas: {
-  //     projectId: "your-eas-project-id",
-  //   },
-  // },
+  extra: {
+    eas: {
+      projectId: "1674bb77-7b4b-4066-a363-51d3329987c7",
+    },
+  },
   experiments: {
     tsconfigPaths: true,
     typedRoutes: true,
   },
-  plugins: ["expo-router"],
-});
+  plugins: [
+    "expo-router",
+    [
+      "expo-location",
+      {
+        isIosBackgroundLocationEnabled: true,
+        isAndroidBackgroundLocationEnabled: true,
+        locationAlwaysAndWhenInUsePermission:
+          "Allow $(PRODUCT_NAME) to use your location to track your position.",
+        locationAlwaysPermission:
+          "Allow $(PRODUCT_NAME) to use your location in the background.",
+        locationWhenInUsePermission:
+          "Allow $(PRODUCT_NAME) to use your location.",
+      },
+    ],
+  ],
+})

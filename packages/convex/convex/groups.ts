@@ -18,3 +18,26 @@ export const create = mutation({
     })
   },
 })
+
+export const update = mutation({
+  args: {
+    groupId: v.id("groups"),
+    isLive: v.boolean(),
+  },
+  handler: async (ctx, { groupId, isLive }) => {
+    return await ctx.db.patch(groupId, {
+      isLive,
+    })
+  },
+})
+
+export const isLive = query({
+  args: { groupId: v.id("groups") },
+  handler: async (ctx, { groupId }) => {
+    const users = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("group"), groupId))
+      .collect()
+    return users.length > 0
+  },
+})

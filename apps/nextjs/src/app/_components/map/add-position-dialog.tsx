@@ -57,6 +57,7 @@ export function AddPositionDialog({
         groupId: selectedGroup,
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
+        fromApp: false,
       })
       toast.success("La position du groupe a été mise à jour avec succès.")
       onOpenChange(false)

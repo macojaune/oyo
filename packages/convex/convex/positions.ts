@@ -52,12 +52,23 @@ export const sendPosition = mutation({
     groupId: v.id("groups"),
     latitude: v.number(),
     longitude: v.number(),
+    fromApp: v.boolean(),
+    owner: v.optional(v.string()),
   },
-  handler: async (ctx, { groupId, latitude, longitude }) => {
-    return await ctx.db.insert("positions", {
+  handler: async (ctx, { groupId, latitude, longitude, fromApp, owner }) => {
+    const data = {
       group: groupId,
       latitude,
       longitude,
-    })
+      fromApp,
+    }
+    if (!owner) {
+      const user = await ctx.db
+        .query("users")
+        .filter((q) => q.eq(q.field("username"), owner))
+        .unique()
+      data.owner = user?._id
+    }
+    return await ctx.db.insert("positions", data)
   },
 })

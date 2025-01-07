@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as groups from "../groups.js";
 import type * as positions from "../positions.js";
+import type * as users from "../users.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,6 +28,7 @@ import type * as positions from "../positions.js";
 declare const fullApi: ApiFromModules<{
   groups: typeof groups;
   positions: typeof positions;
+  users: typeof users;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
