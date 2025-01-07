@@ -221,6 +221,9 @@ importers:
       '@oyo/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@oyo/convex':
+        specifier: workspace:^
+        version: link:../../packages/convex
       '@oyo/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
@@ -233,6 +236,9 @@ importers:
       '@oyo/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@oyo/ui':
+        specifier: workspace:^
+        version: link:../../packages/ui
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5

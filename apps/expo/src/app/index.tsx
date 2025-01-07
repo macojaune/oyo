@@ -8,30 +8,9 @@ import type { Id } from "@oyo/convex"
 import { api as convexApi } from "@oyo/convex"
 import { cn } from "@oyo/ui"
 
-import type { RouterOutputs } from "~/utils/api"
 import { Picker, PickerItem } from "~/components/nativewindui/Picker"
 import { useGroupStore } from "~/lib/store"
 import { useLocationHandler } from "~/lib/useLocation"
-import { useSignIn, useSignOut, useUser } from "~/utils/auth"
-
-function MobileAuth() {
-  const user = useUser()
-  const signIn = useSignIn()
-  const signOut = useSignOut()
-
-  return (
-    <>
-      <Text className="pb-2 text-center text-xl font-semibold text-white">
-        {user?.name ?? "Not logged in"}
-      </Text>
-      <Button
-        onPress={() => (user ? signOut() : signIn())}
-        title={user ? "Sign Out" : "Sign In With Discord"}
-        color={"#5B65E9"}
-      />
-    </>
-  )
-}
 
 export default function Index() {
   const { selectedGroup, setSelectedGroup, userId, setUserId } = useGroupStore()
@@ -162,7 +141,11 @@ export default function Index() {
         )}
         {isTracking && (
           <View>
-            <Text className={cn("mt-4 text-center text-2xl font-semibold")}>
+            <Text
+              className={cn(
+                "mt-4 text-center text-2xl font-semibold dark:text-foreground",
+              )}
+            >
               Partage de ta position en cours
             </Text>
             <Text className="mt-4 text-center text-xl font-semibold text-primary">
@@ -171,9 +154,14 @@ export default function Index() {
                 .find((group) => group._id === selectedGroup)
                 ?.title.toUpperCase()}{" "}
             </Text>
-            <Text className="mt-4 text-center text-xl font-semibold text-destructive-foreground">
-              {error}
+            <Text className="mt-4 text-center text-sm italic text-foreground">
+              Tu peux réduire l'app sans soucis et profiter de ton Mas.
             </Text>
+            {error && (
+              <Text className="mt-4 text-center text-xl font-semibold text-destructive-foreground">
+                {error}
+              </Text>
+            )}
           </View>
         )}
         <View>

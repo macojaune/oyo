@@ -7,7 +7,7 @@ import { useColorScheme } from "nativewind"
 
 import { TRPCProvider } from "~/utils/api"
 
-import "../styles.css"
+import "~/styles.css"
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,
