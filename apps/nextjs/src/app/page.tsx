@@ -75,8 +75,8 @@ export default function HomePage() {
 
       {/* How it Works Section */}
       <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-16 text-center text-4xl font-bold">
+        <div className="container mx-auto flex flex-col items-center gap-16 px-4">
+          <h2 className="text-center text-4xl font-bold">
             Comment ça marche ?
           </h2>
           <div className="grid gap-8 md:grid-cols-3">
@@ -110,6 +110,12 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
+          <Link href="/map">
+            <Button size="lg" variant="outline" className="text-white">
+              <MapPin className="mr-2 h-6 w-6" />
+              Accède à la carte
+            </Button>
+          </Link>
         </div>
       </section>
 
