@@ -3,6 +3,7 @@ import { Button, Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Link, Stack } from "expo-router"
 import { useMutation, useQuery } from "convex/react"
+import { useColorScheme } from "nativewind"
 
 import type { Id } from "@oyo/convex"
 import { api as convexApi } from "@oyo/convex"
@@ -17,7 +18,7 @@ export default function Index() {
   const [formVisible, toggleForm] = useState(false)
   const [groupTitle, setGroupTitle] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-
+  const { colorScheme } = useColorScheme()
   const groups = useQuery(convexApi.groups.get)
   const createGroup = useMutation(convexApi.groups.create)
 
@@ -64,14 +65,13 @@ export default function Index() {
         {!isTracking && (
           <>
             <View className="">
-              <Text className="text-xl font-semibold text-foreground">
+              <Text className="mb-2 text-xl font-semibold text-foreground">
                 1 - Sélectionne ton groupe
               </Text>
               <View>
                 <Picker
                   selectedValue={selectedGroup}
                   onValueChange={setSelectedGroup}
-                  style={{ width: "100%", color: "white" }}
                 >
                   {groups
                     ?.sort((a, b) => a.title.localeCompare(b.title))
@@ -80,6 +80,7 @@ export default function Index() {
                         label={group.title.toUpperCase()}
                         value={group._id}
                         key={group._id}
+                        className="text-background"
                       />
                     ))}
                 </Picker>

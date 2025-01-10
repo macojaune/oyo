@@ -2,7 +2,7 @@ import type { ConfigContext, ExpoConfig } from "expo/config"
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "omasla-app",
+  name: "O mas la ?",
   slug: "omasla-app",
   owner: "marvinldotcom",
   scheme: "expo",
@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   splash: {
     image: "./assets/icon.png",
     resizeMode: "contain",
-    backgroundColor: "#1F104A",
+    backgroundColor: "#efe8dd",
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -36,7 +36,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: "com.marvinl.omasla",
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
-      backgroundColor: "#1F104A",
+      backgroundColor: "#efe8dd",
     },
     permissions: [
       "ACCESS_COARSE_LOCATION",
