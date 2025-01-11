@@ -3,7 +3,6 @@ import { Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Stack } from "expo-router"
 import { useMutation, useQuery } from "convex/react"
-import { useColorScheme } from "nativewind"
 
 import { api as convexApi } from "@oyo/convex"
 import { cn } from "@oyo/ui"
@@ -21,17 +20,16 @@ export default function Index() {
   const { selectedGroup, setSelectedGroup, userId, setUserId } = useGroupStore()
   const { expoPushToken } = useNotifications()
 
-  console.log(userId, expoPushToken)
-
   const groups = useQuery(convexApi.groups.get)
 
   const createGroup = useMutation(convexApi.groups.create)
   const createUser = useMutation(convexApi.users.create)
 
   const {
-    startBackgroundTracking,
+    startTrackingWithRetry,
     stopBackgroundTracking,
     isTracking,
+    isPendingTracking,
     error,
   } = useLocationHandler()
 
@@ -47,11 +45,11 @@ export default function Index() {
 
 
 
-  const handleTracking = () => {
-    if (isTracking) {
-      stopBackgroundTracking()
+  const handleTracking = async () => {
+    if (isTracking||isPendingTracking) {
+      await stopBackgroundTracking()
     } else {
-      startBackgroundTracking()
+      await startTrackingWithRetry()
     }
   }
   return (
@@ -66,10 +64,7 @@ export default function Index() {
             L'appli carnavalier·es
           </Text>
         </View>
-
-        {/* <MobileAuth /> */}
-
-        {!isTracking && (
+        {(!isTracking && !isPendingTracking) && (
           <>
             <View className="">
               <Text className="mb-2 text-xl font-semibold text-foreground">
@@ -159,7 +154,7 @@ export default function Index() {
             <Text className="mt-4 text-center text-xl font-semibold text-primary">
               Groupe :{" "}
               {groups
-                .find((group) => group._id === selectedGroup)
+                ?.find((group) => group._id === selectedGroup)
                 ?.title.toUpperCase()}{" "}
             </Text>
             <Text className="mt-4 text-center text-sm italic text-foreground">
@@ -172,8 +167,33 @@ export default function Index() {
             )}
           </View>
         )}
+        {isPendingTracking && (
+          <View>
+            <Text
+              className={cn(
+                "mt-4 text-center text-2xl font-semibold dark:text-foreground",
+              )}
+            >
+              Une personne partage déjà sa position pour <Text className="text-center text-xl font-semibold text-primary">
+              {groups?.find((group) => group._id === selectedGroup)
+                ?.title.toUpperCase()}
+            </Text>
+            </Text>
+           
+            <Text className="text-lg text-center text-foreground">
+              Tu peux réduire l'app sans soucis et profiter de ton Mas.
+            </Text>
+            <Text className="text-base text-center text-foreground">
+On te met dans la file et on t'enverra une notif si besoin. Woulé!</Text>
+            {error && (
+              <Text className="mt-4 text-center text-xl font-semibold text-destructive-foreground">
+                {error}
+              </Text>
+            )}
+          </View>
+        )}
         <View>
-          {!isTracking && (
+          {(!isTracking&&!isPendingTracking) && (
             <Text className="mt-4 text-xl font-semibold text-foreground">
               2 - Partage ta localisation en direct
             </Text>
@@ -183,6 +203,7 @@ export default function Index() {
               "mt-4 rounded px-3 py-4",
               selectedGroup !== null ? "bg-primary" : "bg-primary/40",
               isTracking && "bg-foreground",
+              isPendingTracking && "bg-transparent border border-destructive active:bg-destructive",
             )}
             onPress={handleTracking}
           >
@@ -193,10 +214,11 @@ export default function Index() {
                   ? "text-muted-foreground"
                   : "text-foreground",
                 isTracking && "text-background",
+                isPendingTracking&&"text-foreground"
               )}
             >
               {selectedGroup !== null
-                ? isTracking
+                ? isTracking || isPendingTracking
                   ? "Arrêter le partage"
                   : "Partage ta localisation"
                 : "Sélectionne ton groupe d'abord"}

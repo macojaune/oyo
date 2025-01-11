@@ -24,7 +24,8 @@ export const startTracking = mutation({
       .unique()
 
     if (activeUser) {
-      throw new Error("Group already has an active tracker")
+      // Instead of throwing, return false to indicate we couldn't start tracking
+      return false
     }
 
     // Set user as active for this group
@@ -64,7 +65,7 @@ export const stopTracking = mutation({
         .collect()
 
       if (activeUsers.length === 0) {
-        // todo push to other group members
+        // todo push notif to others group members
         await ctx.db.patch(user.group, { isLive: false })
       }
     }

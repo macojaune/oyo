@@ -5,16 +5,10 @@ import { Stack } from "expo-router"
 import { StatusBar } from "expo-status-bar"
 import { ConvexProvider, ConvexReactClient } from "convex/react"
 import { useColorScheme } from "nativewind"
-import { useEffect } from "react"
-import { useMutation } from "convex/react"
 
 import { TRPCProvider } from "~/utils/api"
 
 import "~/styles.css"
-
-import { useNotifications } from "~/lib/useNotifications"
-import { useGroupStore } from "~/lib/store"
-import { api as convexApi } from "@oyo/convex"
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,

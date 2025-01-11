@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
 import * as Location from "expo-location"
 import * as TaskManager from "expo-task-manager"
-import { useMutation } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 
-import { api as convexApi } from "@oyo/convex"
+import {  api as convexApi } from "@oyo/convex"
 
 import { useGroupStore } from "./store"
-
+import * as Notifications from 'expo-notifications'
 const LOCATION_TASK_NAME = "omasla-background-location-task"
 
 // Define the background task
@@ -15,7 +15,7 @@ TaskManager.defineTask(
   async ({ data: { locations }, error }) => {
     if (error) {
       console.error(error)
-      return
+      return 
     }
 
     // Get the Convex client - Note: You'll need to configure this separately for background tasks
@@ -25,7 +25,7 @@ TaskManager.defineTask(
     const useGroupStore = require("./store").useGroupStore
 
     const groupId = useGroupStore.getState().selectedGroup
-    let userId = useGroupStore.getState().userId
+    const userId = useGroupStore.getState().userId
 
     try {
       // Process each location update
@@ -54,21 +54,38 @@ TaskManager.defineTask(
 )
 
 export const useLocationHandler = () => {
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string|null>(null)
   const [isTracking, setIsTracking] = useState(false)
+  const [isPendingTracking, setIsPendingTracking] = useState(false)
 
-  const createPosition = useMutation(convexApi.positions.sendPosition)
   const startTracking = useMutation(convexApi.users.startTracking)
   const stopTracking = useMutation(convexApi.users.stopTracking)
   const { selectedGroup, userId } = useGroupStore()
+  
+  // Add this query to check for active users
+  const activeUsers = useQuery(convexApi.users.getActiveUsers, 
+    selectedGroup ? { group: selectedGroup } : 'skip'
+  )
 
   // Cleanup function
   useEffect(() => {
     return () => {
-      stopBackgroundTracking()
+      void stopBackgroundTracking()
     }
   }, [])
+  // Watch for changes in activeUsers
+  useEffect(() => {
+    if (isPendingTracking && (!activeUsers || activeUsers.length === 0)) {
+      void startTrackingWithRetry()
+      void Notifications.scheduleNotificationAsync({
+  content: {
+    title: "Sé tou a'w !",
+    body: "Tu es à présent notre porteur de drapeau",
+  },
+  trigger: null,
+});
+    }
+  }, [activeUsers])
 
   const requestPermissions = async () => {
     try {
@@ -91,50 +108,63 @@ export const useLocationHandler = () => {
     }
   }
 
-  const startBackgroundTracking = async () => {
+  const startTrackingWithRetry = async () => {
     if (!userId || !selectedGroup) return
 
+    const hasPermissions = await requestPermissions()
+    if (!hasPermissions) return
+
+    // If group is already being tracked, set pending state and wait
+    if (activeUsers && activeUsers.length > 0) {
+      setIsPendingTracking(true)
+      return
+    }
+
+    // If group is available, try to start tracking immediately
     try {
-      // If successful, start location tracking
-      const hasPermissions = await requestPermissions()
-      if (!hasPermissions) return
-      // Try to become the active tracker for the group
-      await startTracking({ userId, group: selectedGroup })
-      
-
-      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-        accuracy: Location.Accuracy.Balanced,
-        timeInterval: 60 * 1000, // Update every 1 minute
-        distanceInterval: 50, // Update every 10 meters
-        // This prevents iOS from suspending your app
-        foregroundService: {
-          notificationTitle: "O Mas La ? - Partage de position",
-          notificationBody: "Partage de ta position en arrière-plan",
-        },
-        // Android-specific
-        android: {
-          notification: {
-            title: "O Mas La ? - Partage de position",
-            body: "Partage de ta position en arrière-plan",
-            sticky: true,
+      const success = await startTracking({ userId, group: selectedGroup })
+      if (success) {
+        await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+          accuracy: Location.Accuracy.Balanced,
+          timeInterval: 60 * 1000,
+          distanceInterval: 50,
+          foregroundService: {
+            notificationTitle: "O Mas La ? - Partage de position",
+            notificationBody: "Partage de ta position en arrière-plan",
           },
-        },
-        // iOS-specific
-        ios: {
-          activityType: Location.ActivityType.Fitness,
-          allowsBackgroundLocationUpdates: true,
-          showsBackgroundLocationIndicator: true,
-        },
-      })
-
-      setIsTracking(true)
+          android: {
+            notification: {
+              title: "O Mas La ? - Partage de position",
+              body: "Partage de ta position en arrière-plan",
+              sticky: true,
+            },
+          },
+          ios: {
+            activityType: Location.ActivityType.Fitness,
+            allowsBackgroundLocationUpdates: true,
+            showsBackgroundLocationIndicator: true,
+          },
+        })
+        setIsTracking(true)
+        setIsPendingTracking(false)
+      } else {
+        // Someone might have started tracking just now, set pending
+        setIsPendingTracking(true)
+      }
     } catch (err) {
       setError(err.message)
+      setIsPendingTracking(false) // Clear pending state on error
     }
   }
 
   const stopBackgroundTracking = async () => {
     if (!userId) return
+    
+    if (isPendingTracking) {
+      setIsPendingTracking(false)
+      setError(null)
+      return
+    }
 
     try {
       await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME)
@@ -145,46 +175,12 @@ export const useLocationHandler = () => {
     }
   }
 
-  const getCurrentPositionAndSave = async () => {
-    setLoading(true)
-    try {
-      const hasPermissions = await requestPermissions()
-      if (!hasPermissions) {
-        return
-      }
-
-      const location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      })
-
-      const positionData = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        // timestamp: new Date().toISOString(),
-        // accuracy: location.coords.accuracy,
-        // altitude: location.coords.altitude,
-        // speed: location.coords.speed,
-        // heading: location.coords.heading,
-        // isBackground: false,
-        groupId: selectedGroup,
-        owner: userId,
-        fromApp: true,
-      }
-
-      return await createPosition(positionData)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return {
-    getCurrentPositionAndSave,
-    startBackgroundTracking,
+    startTrackingWithRetry,
     stopBackgroundTracking,
     isTracking,
     error,
-    loading,
+    isGroupBeingTracked: activeUsers && activeUsers.length > 0,
+    isPendingTracking,
   }
 }
