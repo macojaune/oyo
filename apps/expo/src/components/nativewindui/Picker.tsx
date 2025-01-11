@@ -25,7 +25,7 @@ export function Picker<T>({
         mode={mode}
         style={
           style ?? {
-            backgroundColor: colors.root,
+            backgroundColor: colors.background,
             borderRadius: 10,
             color: colors.foreground,
           }

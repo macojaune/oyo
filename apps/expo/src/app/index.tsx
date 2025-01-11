@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react"
-import { Pressable, Text, TextInput, View } from "react-native"
+import { Image, Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Stack } from "expo-router"
 import { useMutation, useQuery } from "convex/react"
 
 import { api as convexApi } from "@oyo/convex"
 import { cn } from "@oyo/ui"
-
+import { useColorScheme } from "~/lib/useColorScheme"
 import { Picker, PickerItem } from "~/components/nativewindui/Picker"
 import { useGroupStore } from "~/lib/store"
 import { useLocationHandler } from "~/lib/useLocation"
 import { useNotifications } from "~/lib/useNotifications"
-
+import logoImg from 'assets/logo.png'
+import logoDarkImg from 'assets/logo-dark.png'
 export default function Index() {
   const [formVisible, toggleForm] = useState(false)
   const [groupTitle, setGroupTitle] = useState("")
@@ -42,8 +43,7 @@ export default function Index() {
         .catch(console.error)
     }
   }, [userId, expoPushToken])
-
-
+const {isDarkColorScheme} = useColorScheme()
 
   const handleTracking = async () => {
     if (isTracking||isPendingTracking) {
@@ -55,18 +55,17 @@ export default function Index() {
   return (
     <SafeAreaView className="bg-background">
       <Stack.Screen options={{ title: "Home Page", headerShown: false }} />
-      <View className="flex h-full w-full flex-col items-stretch justify-evenly gap-4 bg-background p-4">
+      <View className="bg-background flex h-full w-full flex-col items-stretch justify-between gap-4">
         <View>
-          <Text className="mb-0 text-center text-5xl font-bold text-foreground">
-            O Mas La ?
-          </Text>
-          <Text className="text-center text-xl text-primary">
+        <Image source={isDarkColorScheme?logoDarkImg:logoImg} width={463} height={160} className="w-full mx-auto" resizeMode="contain" />
+          <Text className="text-center text-xl text-foreground font-semibold">
             L'appli carnavalier·es
           </Text>
         </View>
+
         {(!isTracking && !isPendingTracking) && (
           <>
-            <View className="">
+            <View className="px-4">
               <Text className="mb-2 text-xl font-semibold text-foreground">
                 1 - Sélectionne ton groupe
               </Text>
@@ -91,14 +90,14 @@ export default function Index() {
                 <Pressable onPress={() => toggleForm(true)} className="my-4">
                   <Text className="text-right text-lg text-foreground">
                     Pas dans la liste ?{" "}
-                    <Text className="font-semibold text-primary">
+                    <Text className="font-semibold text-primary dark:text-primary-foreground">
                       Ajoute le
                     </Text>
                   </Text>
                 </Pressable>
               )}
             </View>
-            <View>
+            <View className="px-4">
               {formVisible && (
                 <View className="my-4 flex flex-col gap-2 rounded-lg bg-card-foreground p-4">
                   <Text className="mb-2 text-xl font-semibold text-primary">
@@ -123,7 +122,7 @@ export default function Index() {
                       toggleForm(false)
                     }}
                   >
-                    <Text className={"text-center text-foreground"}>
+                    <Text className={"text-center text-white"}>
                       {isLoading ? "Ajout en cours…" : "Ajouter"}
                     </Text>
                   </Pressable>
@@ -143,7 +142,7 @@ export default function Index() {
           </>
         )}
         {isTracking && (
-          <View>
+          <View className="px-4">
             <Text
               className={cn(
                 "mt-4 text-center text-2xl font-semibold dark:text-foreground",
@@ -151,7 +150,7 @@ export default function Index() {
             >
               Partage de ta position en cours
             </Text>
-            <Text className="mt-4 text-center text-xl font-semibold text-primary">
+            <Text className="mt-4 text-center text-xl font-semibold text-primary dark:text-foreground">
               Groupe :{" "}
               {groups
                 ?.find((group) => group._id === selectedGroup)
@@ -161,14 +160,14 @@ export default function Index() {
               Tu peux réduire l'app sans soucis et profiter de ton Mas.
             </Text>
             {error && (
-              <Text className="mt-4 text-center text-xl font-semibold text-destructive-foreground">
+              <Text className="mt-4 text-center text-xl font-semibold text-destructive">
                 {error}
               </Text>
             )}
           </View>
         )}
         {isPendingTracking && (
-          <View>
+          <View className="px-4">
             <Text
               className={cn(
                 "mt-4 text-center text-2xl font-semibold dark:text-foreground",
@@ -192,18 +191,18 @@ On te met dans la file et on t'enverra une notif si besoin. Woulé!</Text>
             )}
           </View>
         )}
-        <View>
+        <View className="p-4">
           {(!isTracking&&!isPendingTracking) && (
-            <Text className="mt-4 text-xl font-semibold text-foreground">
+            <Text className="mx-4 text-xl font-semibold text-foreground">
               2 - Partage ta localisation en direct
             </Text>
           )}
           <Pressable
             className={cn(
-              "mt-4 rounded px-3 py-4",
+              "mt-4 rounded px-3 py-8 transform-all ",
               selectedGroup !== null ? "bg-primary" : "bg-primary/40",
-              isTracking && "bg-foreground",
-              isPendingTracking && "bg-transparent border border-destructive active:bg-destructive",
+              (isTracking ||
+              isPendingTracking) && "bg-transparent border border-destructive active:bg-destructive",
             )}
             onPress={handleTracking}
           >
@@ -212,9 +211,8 @@ On te met dans la file et on t'enverra une notif si besoin. Woulé!</Text>
                 "text-center",
                 selectedGroup === null
                   ? "text-muted-foreground"
-                  : "text-foreground",
-                isTracking && "text-background",
-                isPendingTracking&&"text-foreground"
+                  : "text-white",
+                (isPendingTracking||isTracking)&&"text-destructive"
               )}
             >
               {selectedGroup !== null
