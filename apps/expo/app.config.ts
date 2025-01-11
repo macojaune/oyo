@@ -34,6 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: "com.marvinl.omasla",
+    googleServicesFile: "./google-services.json",
     adaptiveIcon: {
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#efe8dd",

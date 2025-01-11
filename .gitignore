@@ -53,3 +53,11 @@ dist/
 
 .idea
 .vscode
+
+apps/expo/google-services.json
+
+apps/expo/google-service-account.json
+
+apps/expo/credentials.json
+
+apps/expo/credentials/
