@@ -59,6 +59,8 @@ export const useLocationHandler = () => {
   const [isTracking, setIsTracking] = useState(false)
 
   const createPosition = useMutation(convexApi.positions.sendPosition)
+  const startTracking = useMutation(convexApi.users.startTracking)
+  const stopTracking = useMutation(convexApi.users.stopTracking)
   const { selectedGroup, userId } = useGroupStore()
 
   // Cleanup function
@@ -90,14 +92,16 @@ export const useLocationHandler = () => {
   }
 
   const startBackgroundTracking = async () => {
-    setLoading(true)
-    try {
-      const hasPermissions = await requestPermissions()
-      if (!hasPermissions) {
-        return
-      }
+    if (!userId || !selectedGroup) return
 
-      // Start background location updates
+    try {
+      // If successful, start location tracking
+      const hasPermissions = await requestPermissions()
+      if (!hasPermissions) return
+      // Try to become the active tracker for the group
+      await startTracking({ userId, group: selectedGroup })
+      
+
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
         accuracy: Location.Accuracy.Balanced,
         timeInterval: 60 * 1000, // Update every 1 minute
@@ -126,14 +130,15 @@ export const useLocationHandler = () => {
       setIsTracking(true)
     } catch (err) {
       setError(err.message)
-    } finally {
-      setLoading(false)
     }
   }
 
   const stopBackgroundTracking = async () => {
+    if (!userId) return
+
     try {
       await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME)
+      await stopTracking({ userId })
       setIsTracking(false)
     } catch (err) {
       setError(err.message)

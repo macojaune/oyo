@@ -15,35 +15,40 @@ export const byId = query({
 
 export const byGroups = query({
   handler: async (ctx) => {
-    const positions = await ctx.db
-      .query("positions")
-      .order("desc")
-      .filter((q) =>
-        q.gte(
-          q.field("_creationTime"),
-          new Date().getTime() - 1000 * 60 * 60 * 6,
-        ),
-      )
-      .collect()
-    const result: Record<
-      Id<"groups">,
-      Doc<"groups"> & { positions: Doc<"positions">[] }
-    > = {}
+    try {
+      const positions = await ctx.db
+        .query("positions")
+        .order("desc")
+        .filter((q) =>
+          q.gte(
+            q.field("_creationTime"),
+            new Date().getTime() - 1000 * 60 * 60 * 6,
+          ),
+        )
+        .collect()
+      const result: Record<
+        Id<"groups">,
+        Doc<"groups"> & { positions: Doc<"positions">[] }
+      > = {}
 
-    for (const position of positions) {
-      const groupId = position.group
-      if (!result[groupId]) {
-        const group = await ctx.db.get(groupId)
-        if (!group) continue
-        result[groupId] = {
-          ...group,
-          positions: [],
+      for (const position of positions) {
+        const groupId = position.group
+        if (!result[groupId]) {
+          const group = await ctx.db.get(groupId)
+          if (!group) continue
+          result[groupId] = {
+            ...group,
+            positions: [],
+          }
         }
+        result[groupId].positions.push(position)
       }
-      result[groupId].positions.push(position)
-    }
 
-    return result
+      return result
+    } catch (e) {
+      console.log(e)
+      return {}
+    }
   },
 })
 
@@ -53,22 +58,16 @@ export const sendPosition = mutation({
     latitude: v.number(),
     longitude: v.number(),
     fromApp: v.boolean(),
-    owner: v.optional(v.string()),
+    owner: v.optional(v.id("users")),
   },
   handler: async (ctx, { groupId, latitude, longitude, fromApp, owner }) => {
-    const data = {
+    
+    return await ctx.db.insert("positions", {
       group: groupId,
       latitude,
       longitude,
       fromApp,
-    }
-    if (owner) {
-      const user = await ctx.db
-        .query("users")
-        .filter((q) => q.eq(q.field("username"), owner))
-        .unique()
-      data.owner = user?._id
-    }
-    return await ctx.db.insert("positions", data)
+      owner: owner ?? undefined
+    })
   },
 })

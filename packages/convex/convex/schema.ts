@@ -3,7 +3,7 @@ import { v } from "convex/values"
 
 export default defineSchema({
   groups: defineTable({ title: v.string(), isLive: v.optional(v.boolean()) }),
-  
+
   positions: defineTable({
     longitude: v.number(),
     latitude: v.number(),
@@ -13,7 +13,8 @@ export default defineSchema({
   }).index("by_group", ["group"]),
 
   users: defineTable({
-    username: v.string(),
-    group: v.id("groups"),
+    pushToken: v.optional(v.string()),
+    group: v.optional(v.id("groups")),
+    isActive: v.optional(v.boolean()),
   }),
 })

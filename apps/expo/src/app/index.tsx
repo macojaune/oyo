@@ -1,50 +1,57 @@
 import { useEffect, useState } from "react"
-import { Button, Pressable, Text, TextInput, View } from "react-native"
+import { Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { Link, Stack } from "expo-router"
+import { Stack } from "expo-router"
 import { useMutation, useQuery } from "convex/react"
 import { useColorScheme } from "nativewind"
 
-import type { Id } from "@oyo/convex"
 import { api as convexApi } from "@oyo/convex"
 import { cn } from "@oyo/ui"
 
 import { Picker, PickerItem } from "~/components/nativewindui/Picker"
 import { useGroupStore } from "~/lib/store"
 import { useLocationHandler } from "~/lib/useLocation"
+import { useNotifications } from "~/lib/useNotifications"
 
 export default function Index() {
-  const { selectedGroup, setSelectedGroup, userId, setUserId } = useGroupStore()
   const [formVisible, toggleForm] = useState(false)
   const [groupTitle, setGroupTitle] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { colorScheme } = useColorScheme()
-  const groups = useQuery(convexApi.groups.get)
-  const createGroup = useMutation(convexApi.groups.create)
 
-  const addUser = useMutation(convexApi.users.add)
-  const deleteUser = useMutation(convexApi.users.remove)
+  const { selectedGroup, setSelectedGroup, userId, setUserId } = useGroupStore()
+  const { expoPushToken } = useNotifications()
+
+  console.log(userId, expoPushToken)
+
+  const groups = useQuery(convexApi.groups.get)
+
+  const createGroup = useMutation(convexApi.groups.create)
+  const createUser = useMutation(convexApi.users.create)
 
   const {
     startBackgroundTracking,
     stopBackgroundTracking,
     isTracking,
     error,
-    loading,
   } = useLocationHandler()
+
   useEffect(() => {
-    if (!userId) {
-      setUserId()
+    if (!userId && expoPushToken) {
+      createUser({ pushToken: expoPushToken })
+        .then((newUserId) => {
+          setUserId(newUserId)
+        })
+        .catch(console.error)
     }
-  }, [])
+  }, [userId, expoPushToken])
+
+
 
   const handleTracking = () => {
     if (isTracking) {
       stopBackgroundTracking()
-      deleteUser({ userId })
     } else {
       startBackgroundTracking()
-      addUser({ userId, group: selectedGroup })
     }
   }
   return (
@@ -70,7 +77,7 @@ export default function Index() {
               </Text>
               <View>
                 <Picker
-                  selectedValue={selectedGroup}
+                  selectedValue={selectedGroup??undefined}
                   onValueChange={setSelectedGroup}
                 >
                   {groups
