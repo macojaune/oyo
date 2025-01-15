@@ -4,7 +4,7 @@ import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
 
 import { cn } from "@oyo/ui"
-import { ThemeProvider, ThemeToggle } from "@oyo/ui/theme"
+import { ThemeProvider } from "@oyo/ui/theme"
 import { Toaster } from "@oyo/ui/toast"
 
 import { TRPCReactProvider } from "~/trpc/react"

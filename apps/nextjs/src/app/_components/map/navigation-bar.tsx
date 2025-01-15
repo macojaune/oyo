@@ -1,11 +1,9 @@
 "use client"
 
-import { Dispatch, SetStateAction } from "react"
 import Link from "next/link"
-import { Menu, Search } from "lucide-react"
+import { Menu } from "lucide-react"
 
 import { Button } from "@oyo/ui/button"
-import { Input } from "@oyo/ui/input"
 import { ThemeToggle } from "@oyo/ui/theme"
 
 export function NavigationBar({
@@ -31,8 +29,8 @@ export function NavigationBar({
           {/* <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input placeholder="Rechercher un groupe..." className="pl-9" />
-          </div>
-          <ThemeToggle />*/}
+          </div>*/}
+          <ThemeToggle />
         </div>
       </div>
     </header>
