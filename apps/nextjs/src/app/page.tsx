@@ -42,11 +42,7 @@ export default function HomePage() {
             Ne manquez plus aucun groupe grâce à la géolocalisation en direct
           </p>
           <Link href="/map">
-            <Button
-              size="lg"
-              variant={isDark ? "primary" : "secondary"}
-              className="dark:text-white"
-            >
+            <Button size="lg" variant="secondary" className="dark:text-white">
               Voir la carte
             </Button>
           </Link>
@@ -103,7 +99,7 @@ export default function HomePage() {
       </section>
 
       {/* Pour les Membres Section */}
-      <section className="bg-secondary py-20 dark:bg-secondary-foreground">
+      <section className="bg-secondary py-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-cover bg-center" />
           <div className="absolute inset-0 bg-gradient-to-b from-purple-900/80 to-purple-900/90 backdrop-blur-sm" />
@@ -111,7 +107,9 @@ export default function HomePage() {
 
         <div className="container relative z-10 mx-auto px-4 text-center">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="mb-4 text-4xl font-bold">Carnavalier·e ?</h2>
+            <h2 className="mb-4 text-4xl font-bold text-primary">
+              Carnavalier·e ?
+            </h2>
             <p className="mb-8 text-xl text-gray-400">
               Télécharge l'application et partage la position de ton groupe en
               direct.
