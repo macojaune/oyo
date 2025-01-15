@@ -19,7 +19,6 @@
     "@oyo/convex": "workspace:*",
     "@oyo/db": "workspace:*",
     "@oyo/ui": "workspace:*",
-    "@oyo/validators": "workspace:*",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",

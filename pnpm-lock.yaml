@@ -281,9 +281,6 @@ importers:
       '@oyo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@oyo/validators':
-        specifier: workspace:*
-        version: link:../../packages/validators
       '@t3-oss/env-nextjs':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.7.3)(zod@3.24.1)
@@ -387,9 +384,6 @@ importers:
       '@oyo/db':
         specifier: workspace:*
         version: link:../db
-      '@oyo/validators':
-        specifier: workspace:*
-        version: link:../validators
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.0.0-rc.688(typescript@5.7.3)
@@ -617,31 +611,6 @@ importers:
       zod:
         specifier: 'catalog:'
         version: 3.24.1
-
-  packages/validators:
-    dependencies:
-      zod:
-        specifier: 'catalog:'
-        version: 3.24.1
-    devDependencies:
-      '@oyo/eslint-config':
-        specifier: workspace:*
-        version: link:../../tooling/eslint
-      '@oyo/prettier-config':
-        specifier: workspace:*
-        version: link:../../tooling/prettier
-      '@oyo/tsconfig':
-        specifier: workspace:*
-        version: link:../../tooling/typescript
-      eslint:
-        specifier: 'catalog:'
-        version: 9.17.0(jiti@2.4.2)
-      prettier:
-        specifier: 'catalog:'
-        version: 3.4.2
-      typescript:
-        specifier: 'catalog:'
-        version: 5.7.3
 
   tooling/eslint:
     dependencies:
