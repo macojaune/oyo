@@ -40,6 +40,7 @@
     "expo-splash-screen": "~0.27.7",
     "expo-status-bar": "~1.12.1",
     "expo-task-manager": "~11.8.2",
+    "expo-updates": "~0.25.27",
     "expo-web-browser": "^13.0.3",
     "nativewind": "~4.1.23",
     "react": "catalog:react18",
