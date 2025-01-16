@@ -9,7 +9,7 @@ const NAV_THEME = {
   },
   dark: {
     ...DarkTheme,
-    colors: COLORS.dark
+    colors: COLORS.dark,
   },
 }
 

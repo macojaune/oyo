@@ -15,7 +15,7 @@ const IOS_SYSTEM_COLORS = {
     root: "rgb(255, 255, 255)",
     card: "rgb(255, 255, 255)",
     destructive: "rgb(223, 56, 33)",
-    primary:  "rgb(94, 23, 235)",
+    primary: "rgb(94, 23, 235)",
   },
   dark: {
     grey6: "rgb(21, 21, 24)",
@@ -48,7 +48,7 @@ const ANDROID_COLORS = {
     root: "rgb(255, 255, 255)",
     card: "rgb(255, 255, 255)",
     destructive: "rgb(223, 56, 33)",
-    primary:  "rgb(94, 23, 235)",
+    primary: "rgb(94, 23, 235)",
   },
   dark: {
     grey6: "rgb(21, 21, 24)",

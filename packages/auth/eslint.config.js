@@ -1,4 +1,4 @@
-import baseConfig, { restrictEnvAccess } from "@oyo/eslint-config/base";
+import baseConfig, { restrictEnvAccess } from "@oyo/eslint-config/base"
 
 /** @type {import('typescript-eslint').Config} */
 export default [
@@ -7,4 +7,4 @@ export default [
   },
   ...baseConfig,
   ...restrictEnvAccess,
-];
+]

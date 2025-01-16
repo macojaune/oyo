@@ -15,7 +15,7 @@ export const create = mutation({
   handler: async (ctx, { title }) => {
     return await ctx.db.insert("groups", {
       title,
-      isLive: false
+      isLive: false,
     })
   },
 })

@@ -2,17 +2,19 @@ import { useEffect, useState } from "react"
 import { Image, Pressable, Text, TextInput, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Stack } from "expo-router"
+import logoDarkImg from "assets/logo-dark.png"
+import logoImg from "assets/logo.png"
 import { useMutation, useQuery } from "convex/react"
 
 import { api as convexApi } from "@oyo/convex"
 import { cn } from "@oyo/ui"
-import { useColorScheme } from "~/lib/useColorScheme"
+
 import { Picker, PickerItem } from "~/components/nativewindui/Picker"
 import { useGroupStore } from "~/lib/store"
+import { useColorScheme } from "~/lib/useColorScheme"
 import { useLocationHandler } from "~/lib/useLocation"
 import { useNotifications } from "~/lib/useNotifications"
-import logoImg from 'assets/logo.png'
-import logoDarkImg from 'assets/logo-dark.png'
+
 export default function Index() {
   const [formVisible, toggleForm] = useState(false)
   const [groupTitle, setGroupTitle] = useState("")
@@ -43,10 +45,10 @@ export default function Index() {
         .catch(console.error)
     }
   }, [userId, expoPushToken])
-const {isDarkColorScheme} = useColorScheme()
+  const { isDarkColorScheme } = useColorScheme()
 
   const handleTracking = async () => {
-    if (isTracking||isPendingTracking) {
+    if (isTracking || isPendingTracking) {
       await stopBackgroundTracking()
     } else {
       await startTrackingWithRetry()
@@ -55,15 +57,21 @@ const {isDarkColorScheme} = useColorScheme()
   return (
     <SafeAreaView className="bg-background">
       <Stack.Screen options={{ title: "Home Page", headerShown: false }} />
-      <View className="bg-background flex h-full w-full flex-col items-stretch justify-between gap-4">
+      <View className="flex h-full w-full flex-col items-stretch justify-between gap-4 bg-background">
         <View>
-        <Image source={isDarkColorScheme?logoDarkImg:logoImg} width={463} height={160} className="w-full mx-auto" resizeMode="contain" />
-          <Text className="text-center text-xl text-foreground font-semibold">
+          <Image
+            source={isDarkColorScheme ? logoDarkImg : logoImg}
+            width={463}
+            height={160}
+            className="mx-auto w-full"
+            resizeMode="contain"
+          />
+          <Text className="text-center text-xl font-semibold text-foreground">
             L'appli carnavalier·es
           </Text>
         </View>
 
-        {(!isTracking && !isPendingTracking) && (
+        {!isTracking && !isPendingTracking && (
           <>
             <View className="px-4">
               <Text className="mb-2 text-xl font-semibold text-foreground">
@@ -71,7 +79,7 @@ const {isDarkColorScheme} = useColorScheme()
               </Text>
               <View>
                 <Picker
-                  selectedValue={selectedGroup??undefined}
+                  selectedValue={selectedGroup ?? undefined}
                   onValueChange={setSelectedGroup}
                 >
                   {groups
@@ -173,17 +181,20 @@ const {isDarkColorScheme} = useColorScheme()
                 "mt-4 text-center text-2xl font-semibold dark:text-foreground",
               )}
             >
-              Une personne partage déjà sa position pour <Text className="text-center text-xl font-semibold text-primary">
-              {groups?.find((group) => group._id === selectedGroup)
-                ?.title.toUpperCase()}
+              Une personne partage déjà sa position pour{" "}
+              <Text className="text-center text-xl font-semibold text-primary">
+                {groups
+                  ?.find((group) => group._id === selectedGroup)
+                  ?.title.toUpperCase()}
+              </Text>
             </Text>
-            </Text>
-           
-            <Text className="text-lg text-center text-foreground">
+
+            <Text className="text-center text-lg text-foreground">
               Tu peux réduire l'app sans soucis et profiter de ton Mas.
             </Text>
-            <Text className="text-base text-center text-foreground">
-On te met dans la file et on t'enverra une notif si besoin. Woulé!</Text>
+            <Text className="text-center text-base text-foreground">
+              On te met dans la file et on t'enverra une notif si besoin. Woulé!
+            </Text>
             {error && (
               <Text className="mt-4 text-center text-xl font-semibold text-destructive-foreground">
                 {error}
@@ -192,27 +203,25 @@ On te met dans la file et on t'enverra une notif si besoin. Woulé!</Text>
           </View>
         )}
         <View className="p-4">
-          {(!isTracking&&!isPendingTracking) && (
+          {!isTracking && !isPendingTracking && (
             <Text className="mx-4 text-xl font-semibold text-foreground">
               2 - Partage ta localisation en direct
             </Text>
           )}
           <Pressable
             className={cn(
-              "mt-4 rounded px-3 py-8 transform-all ",
+              "transform-all mt-4 rounded px-3 py-8",
               selectedGroup !== null ? "bg-primary" : "bg-primary/40",
-              (isTracking ||
-              isPendingTracking) && "bg-transparent border border-destructive active:bg-destructive",
+              (isTracking || isPendingTracking) &&
+                "border border-destructive bg-transparent active:bg-destructive",
             )}
             onPress={handleTracking}
           >
             <Text
               className={cn(
                 "text-center",
-                selectedGroup === null
-                  ? "text-muted-foreground"
-                  : "text-white",
-                (isPendingTracking||isTracking)&&"text-destructive"
+                selectedGroup === null ? "text-muted-foreground" : "text-white",
+                (isPendingTracking || isTracking) && "text-destructive",
               )}
             >
               {selectedGroup !== null

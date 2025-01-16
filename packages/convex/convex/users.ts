@@ -15,11 +15,8 @@ export const startTracking = mutation({
     // Check if there's already an active user for this group
     const activeUser = await ctx.db
       .query("users")
-      .filter((q) => 
-        q.and(
-          q.eq(q.field("group"), group),
-          q.eq(q.field("isActive"), true)
-        )
+      .filter((q) =>
+        q.and(q.eq(q.field("group"), group), q.eq(q.field("isActive"), true)),
       )
       .unique()
 
@@ -31,7 +28,7 @@ export const startTracking = mutation({
     // Set user as active for this group
     await ctx.db.patch(userId, {
       group,
-      isActive: true
+      isActive: true,
     })
 
     // Update group's isLive status
@@ -56,11 +53,11 @@ export const stopTracking = mutation({
       // Check if this was the last active user
       const activeUsers = await ctx.db
         .query("users")
-        .filter((q) => 
+        .filter((q) =>
           q.and(
             q.eq(q.field("group"), user.group),
-            q.eq(q.field("isActive"), true)
-          )
+            q.eq(q.field("isActive"), true),
+          ),
         )
         .collect()
 
@@ -79,11 +76,8 @@ export const getActiveUsers = query({
   handler: async (ctx, { group }) => {
     return await ctx.db
       .query("users")
-      .filter((q) => 
-        q.and(
-          q.eq(q.field("group"), group),
-          q.eq(q.field("isActive"), true)
-        )
+      .filter((q) =>
+        q.and(q.eq(q.field("group"), group), q.eq(q.field("isActive"), true)),
       )
       .collect()
   },

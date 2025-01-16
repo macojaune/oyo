@@ -1,5 +1,5 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from "@t3-oss/env-nextjs"
+import { z } from "zod"
 
 export const env = createEnv({
   server: {
@@ -15,4 +15,4 @@ export const env = createEnv({
   experimental__runtimeEnv: {},
   skipValidation:
     !!process.env.CI || process.env.npm_lifecycle_event === "lint",
-});
+})

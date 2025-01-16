@@ -61,13 +61,12 @@ export const sendPosition = mutation({
     owner: v.optional(v.id("users")),
   },
   handler: async (ctx, { groupId, latitude, longitude, fromApp, owner }) => {
-    
     return await ctx.db.insert("positions", {
       group: groupId,
       latitude,
       longitude,
       fromApp,
-      owner: owner ?? undefined
+      owner: owner ?? undefined,
     })
   },
 })

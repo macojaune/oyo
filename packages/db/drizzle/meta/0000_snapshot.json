@@ -88,9 +88,7 @@
       "indexes": {
         "account_user_id_idx": {
           "name": "account_user_id_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -99,22 +97,15 @@
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "account_provider_providerAccountId_pk": {
-          "columns": [
-            "provider",
-            "providerAccountId"
-          ],
+          "columns": ["provider", "providerAccountId"],
           "name": "account_provider_providerAccountId_pk"
         }
       },
@@ -195,9 +186,7 @@
       "indexes": {
         "session_userId_idx": {
           "name": "session_userId_idx",
-          "columns": [
-            "userId"
-          ],
+          "columns": ["userId"],
           "isUnique": false
         }
       },
@@ -206,12 +195,8 @@
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

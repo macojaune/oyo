@@ -1,13 +1,13 @@
-import { relations, sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm"
 import {
-  sqliteTable,
-  primaryKey,
-  int,
-  text,
   index,
-} from "drizzle-orm/sqlite-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+  int,
+  primaryKey,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core"
+import { createInsertSchema } from "drizzle-zod"
+import { z } from "zod"
 
 export const Post = sqliteTable("post", (t) => ({
   id: int("id").notNull().primaryKey(),
@@ -19,7 +19,7 @@ export const Post = sqliteTable("post", (t) => ({
   updatedAt: int("updatedAt", {
     mode: "timestamp",
   }).default(sql`(unixepoch())`),
-}));
+}))
 
 export const CreatePostSchema = createInsertSchema(Post, {
   title: z.string().max(256),
@@ -28,7 +28,7 @@ export const CreatePostSchema = createInsertSchema(Post, {
   id: true,
   createdAt: true,
   updatedAt: true,
-});
+})
 
 export const User = sqliteTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -38,11 +38,11 @@ export const User = sqliteTable("user", {
     mode: "timestamp",
   }).default(sql`(unixepoch())`),
   image: text("image", { length: 255 }),
-});
+})
 
 export const UsersRelations = relations(User, ({ many }) => ({
   accounts: many(Account),
-}));
+}))
 
 export const Account = sqliteTable(
   "account",
@@ -69,10 +69,10 @@ export const Account = sqliteTable(
     }),
     userIdIdx: index("account_user_id_idx").on(account.userId),
   }),
-);
+)
 export const AccountRelations = relations(Account, ({ one }) => ({
   user: one(User, { fields: [Account.userId], references: [User.id] }),
-}));
+}))
 
 export const Session = sqliteTable(
   "session",
@@ -86,7 +86,7 @@ export const Session = sqliteTable(
   (session) => ({
     userIdIdx: index("session_userId_idx").on(session.userId),
   }),
-);
+)
 export const SessionRelations = relations(Session, ({ one }) => ({
   user: one(User, { fields: [Session.userId], references: [User.id] }),
-}));
+}))

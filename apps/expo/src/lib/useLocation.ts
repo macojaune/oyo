@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import * as Location from "expo-location"
+import * as Notifications from "expo-notifications"
 import * as TaskManager from "expo-task-manager"
 import { useMutation, useQuery } from "convex/react"
 
-import {  api as convexApi } from "@oyo/convex"
+import { api as convexApi } from "@oyo/convex"
 
 import { useGroupStore } from "./store"
-import * as Notifications from 'expo-notifications'
+
 const LOCATION_TASK_NAME = "omasla-background-location-task"
 
 // Define the background task
@@ -15,7 +16,7 @@ TaskManager.defineTask(
   async ({ data: { locations }, error }) => {
     if (error) {
       console.error(error)
-      return 
+      return
     }
 
     // Get the Convex client - Note: You'll need to configure this separately for background tasks
@@ -54,17 +55,18 @@ TaskManager.defineTask(
 )
 
 export const useLocationHandler = () => {
-  const [error, setError] = useState<string|null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [isTracking, setIsTracking] = useState(false)
   const [isPendingTracking, setIsPendingTracking] = useState(false)
 
   const startTracking = useMutation(convexApi.users.startTracking)
   const stopTracking = useMutation(convexApi.users.stopTracking)
   const { selectedGroup, userId } = useGroupStore()
-  
+
   // Add this query to check for active users
-  const activeUsers = useQuery(convexApi.users.getActiveUsers, 
-    selectedGroup ? { group: selectedGroup } : 'skip'
+  const activeUsers = useQuery(
+    convexApi.users.getActiveUsers,
+    selectedGroup ? { group: selectedGroup } : "skip",
   )
 
   // Cleanup function
@@ -78,12 +80,12 @@ export const useLocationHandler = () => {
     if (isPendingTracking && (!activeUsers || activeUsers.length === 0)) {
       void startTrackingWithRetry()
       void Notifications.scheduleNotificationAsync({
-  content: {
-    title: "Sé tou a'w !",
-    body: "Tu es à présent notre porteur de drapeau",
-  },
-  trigger: null,
-});
+        content: {
+          title: "Sé tou a'w !",
+          body: "Tu es à présent notre porteur de drapeau",
+        },
+        trigger: null,
+      })
     }
   }, [activeUsers])
 
@@ -159,7 +161,7 @@ export const useLocationHandler = () => {
 
   const stopBackgroundTracking = async () => {
     if (!userId) return
-    
+
     if (isPendingTracking) {
       setIsPendingTracking(false)
       setError(null)

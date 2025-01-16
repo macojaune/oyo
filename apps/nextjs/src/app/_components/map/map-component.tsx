@@ -1,31 +1,23 @@
-"use client";
+"use client"
 
-import { useEffect, useRef, useState } from "react";
-import mapboxgl, { GeolocateControl, Marker, NavigationControl } from "mapbox-gl";
+import { useEffect, useRef, useState } from "react"
+import mapboxgl, {
+  GeolocateControl,
+  Marker,
+  NavigationControl,
+} from "mapbox-gl"
 
+import "mapbox-gl/dist/mapbox-gl.css"
 
+import { useQuery } from "convex/react"
+import { useTheme } from "next-themes"
 
+import type { Id } from "@oyo/convex"
+import { api as convexApi } from "@oyo/convex"
 
-
-
-import "mapbox-gl/dist/mapbox-gl.css";
-
-
-
-import { useQuery } from "convex/react";
-import { useTheme } from "next-themes";
-
-
-
-import type { Id } from "@oyo/convex";
-import { api as convexApi } from "@oyo/convex";
-
-
-
-import type { Group } from "~/lib/map-utils";
-import { useMapRoute } from "~/hooks/useMapRoute";
-import { formatTime, getMarkerColor } from "~/lib/map-utils";
-
+import type { Group } from "~/lib/map-utils"
+import { useMapRoute } from "~/hooks/useMapRoute"
+import { formatTime, getMarkerColor } from "~/lib/map-utils"
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
@@ -94,7 +86,7 @@ export default function MapComponent({
 
     //remove marker
     const m = new Map(markers)
-    m.forEach(marker=>marker.remove())
+    m.forEach((marker) => marker.remove())
     m.clear()
     setMarkers(m)
     Object.values(groups).forEach((group: Group) => {

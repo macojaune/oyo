@@ -66,8 +66,8 @@ export const useNotifications = () => {
         return
       }
       const projectId =
-        Constants?.expoConfig?.extra?.eas?.projectId ??
-        Constants?.easConfig?.projectId
+        Constants.expoConfig?.extra?.eas?.projectId ??
+        Constants.easConfig?.projectId
       if (!projectId) {
         handleRegistrationError("Project ID not found")
       }

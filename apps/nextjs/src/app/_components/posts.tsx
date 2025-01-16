@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import type { RouterOutputs } from "@oyo/api";
-import { CreatePostSchema } from "@oyo/db/schema";
-import { cn } from "@oyo/ui";
-import { Button } from "@oyo/ui/button";
+import type { RouterOutputs } from "@oyo/api"
+import { CreatePostSchema } from "@oyo/db/schema"
+import { cn } from "@oyo/ui"
+import { Button } from "@oyo/ui/button"
 import {
   Form,
   FormControl,
@@ -11,11 +11,11 @@ import {
   FormItem,
   FormMessage,
   useForm,
-} from "@oyo/ui/form";
-import { Input } from "@oyo/ui/input";
-import { toast } from "@oyo/ui/toast";
+} from "@oyo/ui/form"
+import { Input } from "@oyo/ui/input"
+import { toast } from "@oyo/ui/toast"
 
-import { api } from "~/trpc/react";
+import { api } from "~/trpc/react"
 
 export function CreatePostForm() {
   const form = useForm({
@@ -24,29 +24,29 @@ export function CreatePostForm() {
       content: "",
       title: "",
     },
-  });
+  })
 
-  const utils = api.useUtils();
+  const utils = api.useUtils()
   const createPost = api.post.create.useMutation({
     onSuccess: async () => {
-      form.reset();
-      await utils.post.invalidate();
+      form.reset()
+      await utils.post.invalidate()
     },
     onError: (err) => {
       toast.error(
         err.data?.code === "UNAUTHORIZED"
           ? "You must be logged in to post"
           : "Failed to create post",
-      );
+      )
     },
-  });
+  })
 
   return (
     <Form {...form}>
       <form
         className="flex w-full max-w-2xl flex-col gap-4"
         onSubmit={form.handleSubmit((data) => {
-          createPost.mutate(data);
+          createPost.mutate(data)
         })}
       >
         <FormField
@@ -76,11 +76,11 @@ export function CreatePostForm() {
         <Button>Create</Button>
       </form>
     </Form>
-  );
+  )
 }
 
 export function PostList() {
-  const [posts] = api.post.all.useSuspenseQuery();
+  const [posts] = api.post.all.useSuspenseQuery()
 
   if (posts.length === 0) {
     return (
@@ -93,34 +93,34 @@ export function PostList() {
           <p className="text-2xl font-bold text-white">No posts yet</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="flex w-full flex-col gap-4">
       {posts.map((p) => {
-        return <PostCard key={p.id} post={p} />;
+        return <PostCard key={p.id} post={p} />
       })}
     </div>
-  );
+  )
 }
 
 export function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
+  post: RouterOutputs["post"]["all"][number]
 }) {
-  const utils = api.useUtils();
+  const utils = api.useUtils()
   const deletePost = api.post.delete.useMutation({
     onSuccess: async () => {
-      await utils.post.invalidate();
+      await utils.post.invalidate()
     },
     onError: (err) => {
       toast.error(
         err.data?.code === "UNAUTHORIZED"
           ? "You must be logged in to delete a post"
           : "Failed to delete post",
-      );
+      )
     },
-  });
+  })
 
   return (
     <div className="flex flex-row rounded-lg bg-muted p-4">
@@ -138,11 +138,11 @@ export function PostCard(props: {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 export function PostCardSkeleton(props: { pulse?: boolean }) {
-  const { pulse = true } = props;
+  const { pulse = true } = props
   return (
     <div className="flex flex-row rounded-lg bg-muted p-4">
       <div className="flex-grow">
@@ -164,5 +164,5 @@ export function PostCardSkeleton(props: { pulse?: boolean }) {
         </p>
       </div>
     </div>
-  );
+  )
 }

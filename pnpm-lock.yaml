@@ -112,6 +112,15 @@ importers:
       '@expo/metro-config':
         specifier: ^0.18.11
         version: 0.18.11
+      '@oyo/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@oyo/convex':
+        specifier: workspace:^
+        version: link:../../packages/convex
+      '@oyo/ui':
+        specifier: workspace:^
+        version: link:../../packages/ui
       '@react-native-async-storage/async-storage':
         specifier: 1.23.1
         version: 1.23.1(react-native@0.74.6(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(bufferutil@4.0.9)(react@18.3.1))
@@ -224,12 +233,6 @@ importers:
       '@babel/runtime':
         specifier: ^7.26.0
         version: 7.26.0
-      '@oyo/api':
-        specifier: workspace:*
-        version: link:../../packages/api
-      '@oyo/convex':
-        specifier: workspace:^
-        version: link:../../packages/convex
       '@oyo/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
@@ -237,14 +240,11 @@ importers:
         specifier: workspace:*
         version: link:../../tooling/prettier
       '@oyo/tailwind-config':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/tailwind
       '@oyo/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
-      '@oyo/ui':
-        specifier: workspace:^
-        version: link:../../packages/ui
       '@types/babel__core':
         specifier: ^7.20.5
         version: 7.20.5
