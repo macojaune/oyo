@@ -34,7 +34,7 @@ export default function Index() {
     isPendingTracking,
     error,
   } = useLocationHandler()
-
+  
   useEffect(() => {
     if (!userId && expoPushToken) {
       createUser({ pushToken: expoPushToken })

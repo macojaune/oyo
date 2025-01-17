@@ -116,7 +116,10 @@ export const useLocationHandler = () => {
 
   const startTrackingWithRetry = async () => {
     setError(null)
-    if (!userId || !selectedGroup) return
+    if (!userId || !selectedGroup) {
+      console.error("no userId or selectedGroup",userId,selectedGroup)
+      return
+    }
 
     const hasPermissions = await requestPermissions()
     if (!hasPermissions) {

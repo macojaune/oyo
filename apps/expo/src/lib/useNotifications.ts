@@ -17,7 +17,7 @@ export const useNotifications = () => {
       .then((token) => setExpoPushToken(token ?? ""))
       .catch((error) => {
         console.error(error)
-        setExpoPushToken("")
+        setExpoPushToken("none")
       })
 
     notificationListener.current =

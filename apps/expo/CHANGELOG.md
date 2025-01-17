@@ -1,5 +1,11 @@
 # @oyo/expo
 
+## 1.1.1
+
+### Patch Changes
+
+- small error handling
+
 ## 1.1.0
 
 ### Minor Changes
