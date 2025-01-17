@@ -14,14 +14,12 @@ import "~/app/globals.css"
 
 import { env } from "~/env"
 
-const title = "O Mas la? - Trouve tes groupes a po préférés sans effort"
+const title = "O Mas la? - Trouve tes groupes de carnaval préférés sans effort"
 const description =
   "La solution pour suivre tes groupes de caranaval préférés, fini les dimanches soirs à courir" +
   " inutilement dans Pointe-à-pitre"
 const metadataBase = new URL(
-  env.VERCEL_ENV === "production"
-    ? "https://omasla.fr"
-    : "http://localhost:3000",
+  env.NODE_ENV === "production" ? "https://omasla.fr" : "http://localhost:3000",
 )
 
 export const metadata: Metadata = {
