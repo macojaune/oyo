@@ -25,12 +25,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: true,
     infoPlist: {
       UIBackgroundModes: ["location", "fetch"],
-      NSLocationAlwaysAndWhenInUseUsageDescription:
-        "Allow $(PRODUCT_NAME) to use your location to track your position.",
-      NSLocationAlwaysUsageDescription:
-        "Allow $(PRODUCT_NAME) to use your location in the background.",
-      NSLocationWhenInUseUsageDescription:
-        "Allow $(PRODUCT_NAME) to use your location.",
     },
   },
   android: {
@@ -66,9 +60,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         isIosBackgroundLocationEnabled: true,
         isAndroidBackgroundLocationEnabled: true,
         locationAlwaysAndWhenInUsePermission:
-          "Allow $(PRODUCT_NAME) to use your location to track your position.",
+          "Cela permettra à l'appli de fonctionner même en arrière plan.",
         locationAlwaysPermission:
-          "Allow $(PRODUCT_NAME) to use your location in the background.",
+          "Cela permettra à l'appli de fonctionner même en arrière plan.",
         locationWhenInUsePermission:
           "Allow $(PRODUCT_NAME) to use your location.",
       },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Image, Pressable, Text, TextInput, View } from "react-native"
+import { Image, Pressable, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Stack } from "expo-router"
 import logoDarkImg from "assets/logo-dark.png"
@@ -10,6 +10,7 @@ import { api as convexApi } from "@oyo/convex"
 import { cn } from "@oyo/ui"
 
 import { Picker, PickerItem } from "~/components/nativewindui/Picker"
+import { NewGroupForm } from "~/components/NewGroupForm"
 import { useGroupStore } from "~/lib/store"
 import { useColorScheme } from "~/lib/useColorScheme"
 import { useLocationHandler } from "~/lib/useLocation"
@@ -17,15 +18,13 @@ import { useNotifications } from "~/lib/useNotifications"
 
 export default function Index() {
   const [formVisible, toggleForm] = useState(false)
-  const [groupTitle, setGroupTitle] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const { isDarkColorScheme } = useColorScheme()
 
   const { selectedGroup, setSelectedGroup, userId, setUserId } = useGroupStore()
   const { expoPushToken } = useNotifications()
 
   const groups = useQuery(convexApi.groups.get)
 
-  const createGroup = useMutation(convexApi.groups.create)
   const createUser = useMutation(convexApi.users.create)
 
   const {
@@ -45,7 +44,6 @@ export default function Index() {
         .catch(console.error)
     }
   }, [userId, expoPushToken])
-  const { isDarkColorScheme } = useColorScheme()
 
   const handleTracking = async () => {
     if (isTracking || isPendingTracking) {
@@ -61,8 +59,6 @@ export default function Index() {
         <View>
           <Image
             source={isDarkColorScheme ? logoDarkImg : logoImg}
-            width={463}
-            height={160}
             className="mx-auto w-full"
             resizeMode="contain"
           />
@@ -95,10 +91,13 @@ export default function Index() {
                 </Picker>
               </View>
               {!formVisible && (
-                <Pressable onPress={() => toggleForm(true)} className="my-4">
-                  <Text className="text-right text-lg text-foreground">
+                <Pressable
+                  onPress={() => toggleForm(true)}
+                  className="group my-4"
+                >
+                  <Text className="text-right text-lg text-foreground group-active:text-primary">
                     Pas dans la liste ?{" "}
-                    <Text className="font-semibold text-primary dark:text-primary-foreground">
+                    <Text className="font-semibold text-primary group-active:text-primary-foreground dark:text-primary-foreground">
                       Ajoute le
                     </Text>
                   </Text>
@@ -107,44 +106,11 @@ export default function Index() {
             </View>
             <View className="px-4">
               {formVisible && (
-                <View className="my-4 flex flex-col gap-2 rounded-lg bg-card-foreground p-4">
-                  <Text className="mb-2 text-xl font-semibold text-primary">
-                    Ajoute ton groupe
-                  </Text>
-                  <TextInput
-                    className="items-center rounded-md border border-input px-3 py-4 text-lg leading-[1.25] placeholder:text-muted-foreground"
-                    value={groupTitle}
-                    onChangeText={setGroupTitle}
-                    placeholder="Nom du groupe"
-                  />
-                  <Pressable
-                    className="mt-4 rounded bg-primary px-3 py-4"
-                    onPress={async () => {
-                      setIsLoading(true)
-                      const id = await createGroup({
-                        title: groupTitle,
-                      })
-                      setGroupTitle("")
-                      setSelectedGroup(id)
-                      setIsLoading(false)
-                      toggleForm(false)
-                    }}
-                  >
-                    <Text className={"text-center text-white"}>
-                      {isLoading ? "Ajout en cours…" : "Ajouter"}
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    className="px-3 py-4"
-                    onPress={() => {
-                      toggleForm(false)
-                    }}
-                  >
-                    <Text className={"text-center text-background"}>
-                      Annuler
-                    </Text>
-                  </Pressable>
-                </View>
+                <NewGroupForm
+                  groups={groups}
+                  setGroup={setSelectedGroup}
+                  toggleForm={() => toggleForm(false)}
+                />
               )}
             </View>
           </>
@@ -195,43 +161,47 @@ export default function Index() {
             <Text className="text-center text-base text-foreground">
               On te met dans la file et on t'enverra une notif si besoin. Woulé!
             </Text>
+          </View>
+        )}
+        {!formVisible && (
+          <View className="p-4">
             {error && (
-              <Text className="mt-4 text-center text-xl font-semibold text-destructive-foreground">
+              <Text className="my-4 text-center text-sm font-semibold text-destructive">
                 {error}
               </Text>
             )}
+            {!isTracking && !isPendingTracking && (
+              <Text className="mx-4 text-xl font-semibold text-foreground">
+                2 - Partage ta localisation en direct
+              </Text>
+            )}
+            <Pressable
+              className={cn(
+                "transform-all mt-4 rounded px-3 py-8 active:bg-primary-foreground",
+                selectedGroup !== null ? "bg-primary" : "bg-primary/40",
+                (isTracking || isPendingTracking) &&
+                  "border border-destructive bg-transparent active:bg-destructive",
+              )}
+              onPress={handleTracking}
+            >
+              <Text
+                className={cn(
+                  "text-center",
+                  selectedGroup === null
+                    ? "text-muted-foreground"
+                    : "text-white",
+                  (isPendingTracking || isTracking) && "text-destructive",
+                )}
+              >
+                {selectedGroup !== null
+                  ? isTracking || isPendingTracking
+                    ? "Arrêter le partage"
+                    : "Partage ta localisation"
+                  : "Sélectionne ton groupe d'abord"}
+              </Text>
+            </Pressable>
           </View>
         )}
-        <View className="p-4">
-          {!isTracking && !isPendingTracking && (
-            <Text className="mx-4 text-xl font-semibold text-foreground">
-              2 - Partage ta localisation en direct
-            </Text>
-          )}
-          <Pressable
-            className={cn(
-              "transform-all mt-4 rounded px-3 py-8",
-              selectedGroup !== null ? "bg-primary" : "bg-primary/40",
-              (isTracking || isPendingTracking) &&
-                "border border-destructive bg-transparent active:bg-destructive",
-            )}
-            onPress={handleTracking}
-          >
-            <Text
-              className={cn(
-                "text-center",
-                selectedGroup === null ? "text-muted-foreground" : "text-white",
-                (isPendingTracking || isTracking) && "text-destructive",
-              )}
-            >
-              {selectedGroup !== null
-                ? isTracking || isPendingTracking
-                  ? "Arrêter le partage"
-                  : "Partage ta localisation"
-                : "Sélectionne ton groupe d'abord"}
-            </Text>
-          </Pressable>
-        </View>
       </View>
     </SafeAreaView>
   )
