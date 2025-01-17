@@ -92,14 +92,18 @@ export const useLocationHandler = () => {
   const requestPermissions = async () => {
     try {
       const foreground = await Location.requestForegroundPermissionsAsync()
-      if (foreground.status !== "granted") {
-        setError("Permission to access location was denied")
+      if (foreground.status !== Location.PermissionStatus.GRANTED) {
+        setError(
+          "Autorise l'application dans tes réglages à accéder à ta localisation",
+        )
         return false
       }
 
       const background = await Location.requestBackgroundPermissionsAsync()
-      if (background.status !== "granted") {
-        setError("Permission to access background location was denied")
+      if (background.status !== Location.PermissionStatus.GRANTED) {
+        setError(
+          "Autorise l'application à accéder à ta localisation dans tes réglages pour qu'elle puisse fonctionner en arrière plan",
+        )
         return false
       }
 
@@ -111,10 +115,14 @@ export const useLocationHandler = () => {
   }
 
   const startTrackingWithRetry = async () => {
+    setError(null)
     if (!userId || !selectedGroup) return
 
     const hasPermissions = await requestPermissions()
-    if (!hasPermissions) return
+    if (!hasPermissions) {
+      setError("Autorise l'appli à accéder à ta localisation")
+      return
+    }
 
     // If group is already being tracked, set pending state and wait
     if (activeUsers && activeUsers.length > 0) {
