@@ -173,7 +173,7 @@ export default function HomePage() {
             <div>
               <h3 className="mb-4 text-lg font-semibold">Contact</h3>
               <ul className="space-y-2">
-                <li>contact@marvinl.com</li>
+                <li>info@omasla.fr</li>
               </ul>
             </div>
             <div>
@@ -186,9 +186,6 @@ export default function HomePage() {
                   <Link href="/politique-de-confidentialite">
                     Politique de confidentialité
                   </Link>
-                </li>
-                <li>
-                  <Link href="/cgu">CGU</Link>
                 </li>
               </ul>
             </div>

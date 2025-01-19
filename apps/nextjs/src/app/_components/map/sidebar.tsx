@@ -1,15 +1,14 @@
 "use client"
 
 import { useQuery } from "convex/react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import type { Id } from "@oyo/convex"
 import { api as convexApi } from "@oyo/convex"
-import { Button } from "@oyo/ui/button"
 import { ScrollArea } from "@oyo/ui/scroll-area"
 
 import { AddPositionButton } from "./add-position-button"
 import { GroupCard } from "./group-card"
+import { SponsorBlock } from "./sponsor-block"
 
 interface SidebarProps {
   isOpen: boolean
@@ -67,6 +66,7 @@ export function Sidebar({
               )}
             </div>
           </ScrollArea>
+          <SponsorBlock/>
           <AddPositionButton />
         </div>
       )}
