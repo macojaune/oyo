@@ -66,7 +66,7 @@ export function Sidebar({
               )}
             </div>
           </ScrollArea>
-          <SponsorBlock/>
+          {/* <SponsorBlock/> */}
           <AddPositionButton />
         </div>
       )}
