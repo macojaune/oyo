@@ -36,7 +36,7 @@ export function GroupCard({ group, isSelected, onClick }: GroupCardProps) {
               </span>
             )}
           </div>
-          {group.positions[0]?._creationTime && (
+          {!group.isLive && group.positions[0]?._creationTime && (
             <p className="text-xs text-muted-foreground lg:text-sm">
               {formatDistanceToNow(
                 new Date(group.positions[0]?._creationTime),

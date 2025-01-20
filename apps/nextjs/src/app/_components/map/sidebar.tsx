@@ -46,11 +46,15 @@ export function Sidebar({
             <div className="space-y-2">
               {groups &&
                 Object.values(groups)
-                  .sort(
-                    (a, b) =>
+                  .sort((a, b) => {
+                    // First, sort by isLive status
+                    if (a.isLive && !b.isLive) return -1
+                    if (!a.isLive && b.isLive) return 1
+                    return (
                       b.positions[0]?._creationTime -
-                      a.positions[0]?._creationTime,
-                  )
+                      a.positions[0]?._creationTime
+                    )
+                  })
                   .map((group) => (
                     <GroupCard
                       key={group._id}
