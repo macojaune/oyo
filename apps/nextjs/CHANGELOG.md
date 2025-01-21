@@ -1,5 +1,17 @@
 # @oyo/nextjs
 
+## 1.2.1
+
+### Patch Changes
+
+- fix UI on mobile
+
+## 1.2.0
+
+### Minor Changes
+
+- feat: sponsor block
+
 ## 1.1.2
 
 ### Patch Changes
