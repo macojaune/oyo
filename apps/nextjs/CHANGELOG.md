@@ -1,5 +1,11 @@
 # @oyo/nextjs
 
+## 1.3.0
+
+### Minor Changes
+
+- Homepage Sponsor block
+
 ## 1.2.1
 
 ### Patch Changes
