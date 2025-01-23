@@ -29,7 +29,8 @@ export default function HomePage() {
             height={1638}
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 to-purple-900/80 backdrop-blur-sm" />
+          // Hero section gradient
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-primary/40 backdrop-blur-xs" />
         </div>
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
           <span className="mb-4 text-6xl font-bold text-white md:text-8xl">
@@ -57,19 +58,19 @@ export default function HomePage() {
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
-                icon: <MapPin className="h-12 w-12 text-purple-600" />,
+                icon: <MapPin className="h-12 w-12 text-primary" />,
                 title: "Trouve tes groupes",
                 description:
                   "Consulte la carte interactive pour localiser les groupes en temps réel",
               },
               {
-                icon: <Navigation className="h-12 w-12 text-purple-600" />,
+                icon: <Navigation className="h-12 w-12 text-primary" />,
                 title: "Suivez les déplacements",
                 description:
                   "Sélectionne tes groupes préférés et suis leurs parcours en direct",
               },
               {
-                icon: <Share2 className="h-12 w-12 text-purple-600" />,
+                icon: <Share2 className="h-12 w-12 text-primary" />,
                 title: "Partage ta position",
                 description:
                   "Collabore au projet en partageant la position des groupes à proximité",
@@ -99,7 +100,7 @@ export default function HomePage() {
       </section>
 
       {/* Pour les Membres Section */}
-      <section className="bg-secondary py-20">
+      <section className="bg-neutral-900 py-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-cover bg-center" />
           <div className="absolute inset-0 bg-gradient-to-b from-purple-900/80 to-purple-900/90 backdrop-blur-sm" />
@@ -129,14 +130,14 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Button size="lg" disabled className="bg-purple-500">
+            <Button size="lg" disabled variant="primary">
               Bientôt disponible
             </Button>
           </div>
         </div>
       </section>
       {/* Sponsorship Section */}
-      <section className="h-[100dvh] bg-gradient-to-br from-purple-900/10 to-purple-900/20">
+      <section className="h-[100dvh] bg-gradient-to-br from-primary/10 to-primary/20">
         <div className="container mx-auto h-full px-4 flex flex-col items-center justify-center max-w-3xl text-center">
             <h2 className="mb-4 text-4xl font-bold">
               Soutenez le projet
@@ -149,17 +150,17 @@ export default function HomePage() {
             <div className="mb-12 grid gap-6 md:grid-cols-3">
               {[
                 {
-                  icon: <Megaphone className="h-12 w-12 text-purple-600" />,
+                  icon: <Megaphone className="h-12 w-12 text-primary" />,
                   title: "Visibilité",
                   description: "Gagnez en visibilité pendant le carnaval",
                 },
                 {
-                  icon: <Heart className="h-12 w-12 text-purple-600" />,
+                  icon: <Heart className="h-12 w-12 text-primary" />,
                   title: "Impact Social",
                   description: "Contribuez à un projet communautaire innovant",
                 },
                 {
-                  icon: <Sparkles className="h-12 w-12 text-purple-600" />,
+                  icon: <Sparkles className="h-12 w-12 text-primary" />,
                   title: "Sur Mesure",
                   description: "Co-créez des expériences carnavalesques inédites",
                 },
@@ -186,7 +187,7 @@ export default function HomePage() {
         </div>
       </section>
       {/* Footer */}
-      <footer className="bg-gray-900 py-12 text-white">
+      <footer className="bg-neutral-900 py-12 text-white">
         <p className="mb-8 text-center font-mono text-lg">
           Tambouriné avec ❤️ par
           <a href="https://marvinl.com" target="_blank">
