@@ -1,7 +1,7 @@
 {
   "name": "@oyo/convex",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
@@ -24,6 +24,7 @@
   },
   "prettier": "@oyo/prettier-config",
   "dependencies": {
-    "convex": "^1.17.4"
+    "convex": "^1.17.4",
+    "expo-server-sdk": "^3.13.0"
   }
 }

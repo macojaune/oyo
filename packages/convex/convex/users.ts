@@ -82,3 +82,12 @@ export const getActiveUsers = query({
       .collect()
   },
 })
+
+export const getAllUsers = query({
+  args: {},
+  handler: async (ctx,) => {
+    return await ctx.db
+      .query("users")
+      .collect()
+  },
+})
