@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useMutation } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { Loader2 } from "lucide-react"
 
 import type { Id } from "@oyo/convex"
@@ -31,15 +31,24 @@ export function AddGroupDialog({
   const [title, setTitle] = useState("")
   const [isSubmitting, setSubmitting] = useState(false)
   const createGroup = useMutation(api.groups.create)
+  const groups = useQuery(api.groups.get)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!title.trim()) return
+    if (!title.trim()) {
+      toast.error("Impossible de créer un groupe sans nom")
 
+      return
+    }
+    const groupExists = groups?.find((group) => group.title.toLowerCase() === title.trim().toLowerCase())
+    if (groupExists) {
+      toast.error("Un groupe avec ce nom existe déjà")
+      return
+    }
+    
     setSubmitting(true)
     try {
       const id = await createGroup({ title: title.trim() })
-      console.log("groupcreated", id)
       toast.success("Groupe créé avec succès")
       if (onSuccess) onSuccess(id as Id<"groups">)
       onOpenChange(false)
