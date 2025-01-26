@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { MapPin, Navigation, Share2 } from "lucide-react"
+import { MapPin, Navigation, Share2, Megaphone, Heart, Sparkles } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@oyo/ui/button"
@@ -29,7 +29,8 @@ export default function HomePage() {
             height={1638}
             className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/60 to-purple-900/80 backdrop-blur-sm" />
+          // Hero section gradient
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-primary/40 backdrop-blur-xs" />
         </div>
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
           <span className="mb-4 text-6xl font-bold text-white md:text-8xl">
@@ -57,19 +58,19 @@ export default function HomePage() {
           <div className="grid gap-8 md:grid-cols-3">
             {[
               {
-                icon: <MapPin className="h-12 w-12 text-purple-600" />,
+                icon: <MapPin className="h-12 w-12 text-primary" />,
                 title: "Trouve tes groupes",
                 description:
                   "Consulte la carte interactive pour localiser les groupes en temps réel",
               },
               {
-                icon: <Navigation className="h-12 w-12 text-purple-600" />,
+                icon: <Navigation className="h-12 w-12 text-primary" />,
                 title: "Suivez les déplacements",
                 description:
                   "Sélectionne tes groupes préférés et suis leurs parcours en direct",
               },
               {
-                icon: <Share2 className="h-12 w-12 text-purple-600" />,
+                icon: <Share2 className="h-12 w-12 text-primary" />,
                 title: "Partage ta position",
                 description:
                   "Collabore au projet en partageant la position des groupes à proximité",
@@ -99,7 +100,7 @@ export default function HomePage() {
       </section>
 
       {/* Pour les Membres Section */}
-      <section className="bg-secondary py-20">
+      <section className="bg-neutral-900 py-20">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-cover bg-center" />
           <div className="absolute inset-0 bg-gradient-to-b from-purple-900/80 to-purple-900/90 backdrop-blur-sm" />
@@ -129,39 +130,64 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Button size="lg" disabled className="bg-purple-500">
+            <Button size="lg" disabled variant="primary">
               Bientôt disponible
             </Button>
           </div>
         </div>
       </section>
-
-      {/* {/* Features Section 
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <h2 className="mb-16 text-center text-4xl font-bold">
-              Fonctionnalités
+      {/* Sponsorship Section */}
+      <section className="h-[100dvh] bg-gradient-to-br from-primary/10 to-primary/20">
+        <div className="container mx-auto h-full px-4 flex flex-col items-center justify-center max-w-3xl text-center">
+            <h2 className="mb-4 text-4xl font-bold">
+              Soutenez le projet
             </h2>
-            <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
+            <p className="mb-8 text-xl text-gray-500">
+              Devenez sponsor de O Mas La ? et contribuez à améliorer l'expérience du carnaval pour tous.
+              Votre soutien nous aidera à maintenir et développer ce service gratuit.
+            </p>
+            {/* // Find the sponsorship section and update the benefits array */}
+            <div className="mb-12 grid gap-6 md:grid-cols-3">
               {[
-                { icon: <Map />, title: "Carte interactive" },
-                { icon: <Navigation />, title: "Positions en temps réel" },
-              ].map((feature, index) => (
-                <div key={index} className="text-center">
-                  <div className="mb-4 flex justify-center">
-                    <div className="rounded-full bg-purple-400 p-4">
-                      {feature.icon}
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-semibold">{feature.title}</h3>
-                </div>
-              ))}
+                {
+                  icon: <Megaphone className="h-12 w-12 text-primary" />,
+                  title: "Visibilité",
+                  description: "Gagnez en visibilité pendant le carnaval",
+                },
+                {
+                  icon: <Heart className="h-12 w-12 text-primary" />,
+                  title: "Impact Social",
+                  description: "Contribuez à un projet communautaire innovant",
+                },
+                {
+                  icon: <Sparkles className="h-12 w-12 text-primary" />,
+                  title: "Sur Mesure",
+                  description: "Co-créez des expériences carnavalesques inédites",
+                },
+              ].map((item, index) => (
+                <Card
+                  key={index}
+                  className="p-6 text-center transition-shadow hover:shadow-lg"
+                >
+                  <div className="mb-4 flex justify-center">{item.icon}</div>
+                  <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
+                  <p className="text-gray-400 text-sm">{item.description}</p>
+                </Card>
+              ))} 
             </div>
-          </div>
-        </section> */}
-
+            <a
+              href="https://tally.so/r/3EvMVo"
+              target="_blank"
+              rel="noopener"
+            >
+              <Button size="lg" variant="primary">
+                Devenir sponsor
+              </Button>
+            </a>
+        </div>
+      </section>
       {/* Footer */}
-      <footer className="bg-gray-900 py-12 text-white">
+      <footer className="bg-neutral-900 py-12 text-white">
         <p className="mb-8 text-center font-mono text-lg">
           Tambouriné avec ❤️ par
           <a href="https://marvinl.com" target="_blank">
