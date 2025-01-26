@@ -22,6 +22,7 @@
     "@oyo/auth": "workspace:*",
     "@oyo/db": "workspace:*",
     "@trpc/server": "catalog:",
+    "expo-server-sdk": "^3.13.0",
     "superjson": "2.2.1",
     "zod": "catalog:"
   },
