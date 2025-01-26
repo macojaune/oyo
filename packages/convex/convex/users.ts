@@ -3,6 +3,7 @@ import { v } from "convex/values"
 import { action, mutation, query } from "./_generated/server"
 import { api } from "./_generated/api"
 import { Doc } from "../src"
+import { Expo } from "expo-server-sdk"
 
 export const create = mutation({
   args: { pushToken: v.string() },
@@ -91,54 +92,5 @@ export const getAllUsers = query({
     return await ctx.db
       .query("users")
       .collect()
-  },
-})
-
-export const sendPushToAll = action({
-  args: { 
-    title: v.string(),
-    body: v.string(),
-    data: v.optional(v.record(v.string(),v.any()))
-  },
-  handler: async (ctx, {  title, body, data }) => {
-    const users = await ctx.runQuery<Doc<"users">[]>(api.users.getAllUsers)
-    
-    const pushTokens = users
-      .map(user => user.pushToken)
-      .filter((token): token is string => token !== undefined)
-
-    if (pushTokens.length === 0) {
-      return { success: false, message: "No users with push tokens found" }
-    }
-
-    try {
-      const results = await Promise.all(
-        pushTokens.map(token =>
-          fetch(process.env.API_URL+"/api/trpc/notification.send", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              token,
-              title,
-              body,
-              data,
-            }),
-          })
-        )
-      )
-
-      const successful = results.filter(r => r.ok).length
-      return {
-        success: true,
-        message: `Successfully sent ${successful}/${pushTokens.length} notifications`
-      }
-    } catch (error) {
-      return {
-        success: false,
-        message: `Failed to send notifications: ${error}`
-      }
-    }
   },
 })
