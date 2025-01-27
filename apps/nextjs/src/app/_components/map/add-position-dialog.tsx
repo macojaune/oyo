@@ -1,11 +1,21 @@
 "use client"
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
 import { useMutation, useQuery } from "convex/react"
 import { Loader2 } from "lucide-react"
+import { Check, ChevronsUpDown } from "lucide-react"
 
-import { api as convexApi, Doc, Id } from "@oyo/convex"
+import { api as convexApi } from "@oyo/convex"
+import type { Doc, Id } from "@oyo/convex"
 import { Button } from "@oyo/ui/button"
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@oyo/ui/command"
 import {
   Dialog,
   DialogContent,
@@ -16,13 +26,12 @@ import {
 } from "@oyo/ui/dialog"
 import { Label } from "@oyo/ui/label"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@oyo/ui/select"
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@oyo/ui/popover"
 import { toast } from "@oyo/ui/toast"
+import { cn } from "@oyo/ui"
 
 import { useGeolocation } from "~/hooks/useGeolocation"
 
@@ -42,6 +51,7 @@ export function AddPositionDialog({
   setSelectedGroup,
 }: AddPositionDialogProps) {
   const [isSubmitting, setSubmitting] = useState(false)
+  const [open, setOpen] = useState(false)
 
   const groups = useQuery(convexApi.groups.get)
   const doSendPosition = useMutation(convexApi.positions.sendPosition)
@@ -80,25 +90,24 @@ export function AddPositionDialog({
         </DialogHeader>
         <div className="space-y-2">
           <Label htmlFor="group">Groupe</Label>
-          <Select
-            value={selectedGroup ?? undefined}
-            onValueChange={setSelectedGroup}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionner un groupe" />
-            </SelectTrigger>
-            <SelectContent>
-              {groups
-                ?.filter((group) => !group.isLive)
-                .sort((a, b) => a.title.localeCompare(b.title))
-                .map((group) => (
-                  <SelectItem key={group._id} value={group._id}>
-                    {group.title.toUpperCase()}
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
-          <p className="text-right text-sm">
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-full justify-between"
+              >
+                {selectedGroup
+                  ? groups?.find((group) => group._id === selectedGroup)?.title.toUpperCase()
+                  : "Sélectionner un groupe"}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0" align="start">
+              <Command className="overflow-scroll max-h-[330px]">
+                <CommandInput placeholder="Rechercher un groupe..." />
+                <CommandEmpty> <p className=" text-sm">
             Pas dans la liste ?{" "}
             <Button
               onClick={() => openAddGroupDialog()}
@@ -107,7 +116,34 @@ export function AddPositionDialog({
             >
               Ajoute-le
             </Button>
-          </p>
+          </p> </CommandEmpty>
+                <CommandGroup className="overflow-scroll">
+                  {groups
+                    ?.filter((group) => !group.isLive)
+                    .sort((a, b) => a.title.localeCompare(b.title))
+                    .map((group) => (
+                      <CommandItem
+                        key={group._id}
+                        value={group.title}
+                        onSelect={() => {
+                          setSelectedGroup(group._id)
+                          setOpen(false)
+                        }}
+                      >
+                        <Check
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            selectedGroup === group._id ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                        {group.title.toUpperCase()}
+                      </CommandItem>
+                    ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+          {/* */}
         </div>
 
         <DialogFooter className="mt-8 flex justify-end gap-3">
