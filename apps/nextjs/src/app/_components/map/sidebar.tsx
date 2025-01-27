@@ -25,52 +25,54 @@ export function Sidebar({
 }: SidebarProps) {
   const groups = useQuery(convexApi.positions.byGroups)
 
+  const renderGroups = () => {
+    if (!groups || Object.values(groups).length === 0) {
+      return (
+        <>
+          <div className="text-center text-sm text-purple-400">
+            Aucune position ajoutée récemment.
+          </div>
+          <SponsorBlock />
+        </>
+      );
+    }
+
+    const sortedGroups = Object.values(groups).sort((a, b) => {
+      if (a.isLive && !b.isLive) return -1;
+      if (!a.isLive && b.isLive) return 1;
+      return b.positions[0]?._creationTime - a.positions[0]?._creationTime;
+    })
+
+    // Insert SponsorBlock after the second item or at the end if less than 2 items
+    return sortedGroups.reduce((acc: React.ReactNode[], group, index) => {
+      acc.push(
+        <GroupCard
+          key={group._id}
+          group={group}
+          isSelected={group._id === selectedGroup}
+          onClick={() => onGroupSelect(group._id)}
+        />
+      );
+      
+      if (index === 2) {
+        acc.push(<SponsorBlock key="sponsor" />);
+      }
+      return acc;
+    }, []);
+  };
+
   return (
-    <div
-      className={`w-full border-r bg-background lg:relative ${isOpen ? "h-[45dvh] lg:w-80" : "h-0 lg:w-0"} transition-all duration-300 lg:h-full`}
-    >
+    <div className={`w-full border-r bg-background lg:relative ${isOpen ? "h-[45dvh] lg:w-80" : "h-0 lg:w-0"} transition-all duration-300 lg:h-full`}>
       {isOpen && (
         <div className="flex h-full flex-col p-4 pb-20 lg:pb-4">
           <div className="flex flex-row justify-between">
             <h2 className="mb-4 text-xl font-bold">Groupes</h2>
-            {/* <Button
-              variant="ghost"
-              size="icon"
-              className="hidden lg:flex"
-              onClick={onToggle}
-            >
-              {isOpen ? <ChevronLeft /> : <ChevronRight />}
-            </Button> */}
           </div>
           <ScrollArea className="">
             <div className="space-y-2">
-              {groups &&
-                Object.values(groups)
-                  .sort((a, b) => {
-                    // First, sort by isLive status
-                    if (a.isLive && !b.isLive) return -1
-                    if (!a.isLive && b.isLive) return 1
-                    return (
-                      b.positions[0]?._creationTime -
-                      a.positions[0]?._creationTime
-                    )
-                  })
-                  .map((group) => (
-                    <GroupCard
-                      key={group._id}
-                      group={group}
-                      isSelected={group._id === selectedGroup}
-                      onClick={() => onGroupSelect(group._id)}
-                    />
-                  ))}
-              {groups && Object.values(groups).length === 0 && (
-                <div className="text-center text-sm text-purple-400">
-                  Aucune position ajoutée récemment.
-                </div>
-              )}
+              {renderGroups()}
             </div>
           </ScrollArea>
-          <SponsorBlock/>
           <AddPositionButton />
         </div>
       )}

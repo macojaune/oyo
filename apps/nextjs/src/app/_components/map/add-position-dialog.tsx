@@ -154,7 +154,11 @@ export function AddPositionDialog({
           >
             Annuler
           </Button>
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Mettre à jour
           </Button>
