@@ -22,7 +22,7 @@ export const byGroups = query({
         .filter((q) =>
           q.gte(
             q.field("_creationTime"),
-            new Date().getTime() - 1000 * 60 * 60 * 6,
+new Date().getTime() - 1000 * 60 * 10
           ),
         )
         .collect()
