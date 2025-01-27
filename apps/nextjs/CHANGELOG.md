@@ -1,5 +1,19 @@
 # @oyo/nextjs
 
+## 1.4.0
+
+### Minor Changes
+
+- feat: add autocomplete to select group modal
+
+### Patch Changes
+
+- fix: prevent empty or existing group in add group modal
+- Updated dependencies [f3150fe]
+- Updated dependencies
+  - @oyo/convex@1.3.0
+  - @oyo/api@0.2.0
+
 ## 1.3.0
 
 ### Minor Changes

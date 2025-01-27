@@ -1,5 +1,14 @@
 # @oyo/expo
 
+## 1.1.2
+
+### Patch Changes
+
+- Updated dependencies [f3150fe]
+- Updated dependencies
+  - @oyo/convex@1.3.0
+  - @oyo/api@0.2.0
+
 ## 1.1.1
 
 ### Patch Changes
