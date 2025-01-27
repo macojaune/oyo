@@ -34,6 +34,7 @@ import { toast } from "@oyo/ui/toast"
 import { cn } from "@oyo/ui"
 
 import { useGeolocation } from "~/hooks/useGeolocation"
+import { ScrollArea } from "@oyo/ui/scroll-area"
 
 interface AddPositionDialogProps {
   isOpen: boolean
@@ -104,20 +105,22 @@ export function AddPositionDialog({
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0" align="start">
-              <Command className="overflow-scroll max-h-[330px]">
+            <PopoverContent className="w-full p-0" align="start" side="bottom">
+              <Command>
                 <CommandInput placeholder="Rechercher un groupe..." />
-                <CommandEmpty> <p className=" text-sm">
-            Pas dans la liste ?{" "}
-            <Button
-              onClick={() => openAddGroupDialog()}
-              variant="link"
-              className="ml-2 p-0"
-            >
-              Ajoute-le
-            </Button>
-          </p> </CommandEmpty>
-                <CommandGroup className="overflow-scroll">
+                <ScrollArea><CommandEmpty>
+                  <p className="text-sm">
+                    Pas dans la liste ?{" "}
+                    <Button
+                      onClick={() => openAddGroupDialog()}
+                      variant="link"
+                      className="ml-2 p-0"
+                    >
+                      Ajoute-le
+                    </Button>
+                  </p>
+                </CommandEmpty>
+                <CommandGroup className="max-h-[200px] overflow-y-auto">
                   {groups
                     ?.filter((group) => !group.isLive)
                     .sort((a, b) => a.title.localeCompare(b.title))
@@ -139,7 +142,8 @@ export function AddPositionDialog({
                         {group.title.toUpperCase()}
                       </CommandItem>
                     ))}
-                </CommandGroup>
+                  </CommandGroup>
+                  </ScrollArea>
               </Command>
             </PopoverContent>
           </Popover>
