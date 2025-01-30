@@ -14,7 +14,7 @@ export const useNotifications = () => {
 
   useEffect(() => {
     registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token ?? ""))
+      .then((token) => setExpoPushToken(token))
       .catch((error) => {
         console.error(error)
         setExpoPushToken("none")
@@ -86,6 +86,7 @@ export const useNotifications = () => {
       }
     } else {
       handleRegistrationError("Must use physical device for push notifications")
+      return "simulator"
     }
   }
   return { expoPushToken, notification, notificationListener }

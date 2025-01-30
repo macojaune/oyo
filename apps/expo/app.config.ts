@@ -24,6 +24,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundleIdentifier: "com.marvinl.omasla",
     supportsTablet: true,
     infoPlist: {
+      "ITSAppUsesNonExemptEncryption": false,
       UIBackgroundModes: ["location", "fetch"],
     },
   },
