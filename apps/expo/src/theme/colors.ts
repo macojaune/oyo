@@ -62,7 +62,7 @@ const ANDROID_COLORS = {
     root: "rgb(0, 0, 0)",
     card: "rgb(21, 21, 24)",
     destructive: "rgb(254, 67, 54)",
-    primary: "rgb(3, 133, 255)",
+    primary: "rgb(94, 23, 235)",
   },
 } as const
 

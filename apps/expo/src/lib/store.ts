@@ -12,6 +12,8 @@ export const useGroupStore = create<{
   setSelectedGroup: (groupId: Id<"groups">) => void
   userId: Id<"users"> | null
   setUserId: (id: Id<"users">) => void
+  hasSeenIntro: boolean
+  setHasSeenIntro: (seen: boolean) => void
 }>()(
   persist(
     (set) => ({
@@ -19,6 +21,8 @@ export const useGroupStore = create<{
       setSelectedGroup: (groupId) => set({ selectedGroup: groupId }),
       userId: null,
       setUserId: (id) => set({ userId: id }),
+      hasSeenIntro: false,
+      setHasSeenIntro: (seen) => set({ hasSeenIntro: seen }),
     }),
     {
       name: "omasla-store",
