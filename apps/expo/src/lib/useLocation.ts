@@ -117,7 +117,7 @@ export const useLocationHandler = () => {
   const startTrackingWithRetry = async () => {
     setError(null)
     if (!userId || !selectedGroup) {
-      console.error("no userId or selectedGroup",userId,selectedGroup)
+      console.error("no userId or selectedGroup", userId, selectedGroup)
       return
     }
 
@@ -129,6 +129,17 @@ export const useLocationHandler = () => {
 
     // If group is already being tracked, set pending state and wait
     if (activeUsers && activeUsers.length > 0) {
+      //check if current user is the tracking user
+      const isTrackingUser = activeUsers.find((user) => {
+        console.log("user:", user._id, userId)
+
+        return user._id === userId
+      })
+      if (isTrackingUser) {
+        setIsTracking(true)
+        setIsPendingTracking(false)
+        return
+      }
       setIsPendingTracking(true)
       return
     }
@@ -138,8 +149,8 @@ export const useLocationHandler = () => {
       const success = await startTracking({ userId, group: selectedGroup })
       if (success) {
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-          accuracy: Location.Accuracy.Balanced,
-          timeInterval: 60 * 1000,
+          accuracy: Location.Accuracy.BestForNavigation,
+          timeInterval: 60 * 1000* 30,
           distanceInterval: 50,
           foregroundService: {
             notificationTitle: "O Mas La ? - Partage de position",
@@ -153,7 +164,7 @@ export const useLocationHandler = () => {
             },
           },
           ios: {
-            activityType: Location.ActivityType.Fitness,
+            activityType: Location.ActivityType.OtherNavigation,
             allowsBackgroundLocationUpdates: true,
             showsBackgroundLocationIndicator: true,
           },
@@ -181,6 +192,10 @@ export const useLocationHandler = () => {
 
     try {
       await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME)
+    } catch (err) {
+      setError(err.message)
+    }
+    try {
       await stopTracking({ userId })
       setIsTracking(false)
     } catch (err) {

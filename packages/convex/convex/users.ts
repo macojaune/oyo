@@ -1,9 +1,9 @@
+import { Expo } from "expo-server-sdk"
 import { v } from "convex/values"
 
-import { action, mutation, query } from "./_generated/server"
-import { api } from "./_generated/api"
 import { Doc } from "../src"
-import { Expo } from "expo-server-sdk"
+import { api } from "./_generated/api"
+import { action, mutation, query } from "./_generated/server"
 
 export const create = mutation({
   args: { pushToken: v.string() },
@@ -88,9 +88,7 @@ export const getActiveUsers = query({
 
 export const getAllUsers = query({
   args: {},
-  handler: async (ctx,) => {
-    return await ctx.db
-      .query("users")
-      .collect()
+  handler: async (ctx) => {
+    return await ctx.db.query("users").collect()
   },
 })

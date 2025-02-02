@@ -2,7 +2,15 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { MapPin, Navigation, Share2, Megaphone, Heart, Sparkles } from "lucide-react"
+import {
+  AppleIcon,
+  Heart,
+  MapPin,
+  Megaphone,
+  Navigation,
+  Share2,
+  Sparkles,
+} from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@oyo/ui/button"
@@ -30,7 +38,7 @@ export default function HomePage() {
             className="object-cover object-center"
           />
           // Hero section gradient
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-primary/40 backdrop-blur-xs" />
+          <div className="backdrop-blur-xs absolute inset-0 bg-gradient-to-b from-primary/10 to-primary/40" />
         </div>
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
           <span className="mb-4 text-6xl font-bold text-white md:text-8xl">
@@ -130,60 +138,65 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <Button size="lg" disabled variant="primary">
-              Bientôt disponible
-            </Button>
+            <div className="flex flex-row items-center justify-between gap-4">
+              <a
+                href="https://apps.apple.com/fr/app/o-mas-la/id6740550162"
+                target="_blank"
+              >
+                <Button size="lg" variant="primary">
+                  Apple store
+                </Button>
+              </a>
+              <Button size="lg" disabled variant="primary">
+                Android (bientot disponible)
+              </Button>
+            </div>
           </div>
         </div>
       </section>
       {/* Sponsorship Section */}
       <section className="h-[100dvh] bg-gradient-to-br from-primary/10 to-primary/20">
-        <div className="container mx-auto h-full px-4 flex flex-col items-center justify-center max-w-3xl text-center">
-            <h2 className="mb-4 text-4xl font-bold">
-              Soutenez le projet
-            </h2>
-            <p className="mb-8 text-xl text-gray-500">
-              Devenez sponsor de O Mas La ? et contribuez à améliorer l'expérience du carnaval pour tous.
-              Votre soutien nous aidera à maintenir et développer ce service gratuit.
-            </p>
-            {/* // Find the sponsorship section and update the benefits array */}
-            <div className="mb-12 grid gap-6 md:grid-cols-3">
-              {[
-                {
-                  icon: <Megaphone className="h-12 w-12 text-primary" />,
-                  title: "Visibilité",
-                  description: "Gagnez en visibilité pendant le carnaval",
-                },
-                {
-                  icon: <Heart className="h-12 w-12 text-primary" />,
-                  title: "Impact Social",
-                  description: "Contribuez à un projet communautaire innovant",
-                },
-                {
-                  icon: <Sparkles className="h-12 w-12 text-primary" />,
-                  title: "Sur Mesure",
-                  description: "Co-créez des expériences carnavalesques inédites",
-                },
-              ].map((item, index) => (
-                <Card
-                  key={index}
-                  className="p-6 text-center transition-shadow hover:shadow-lg"
-                >
-                  <div className="mb-4 flex justify-center">{item.icon}</div>
-                  <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.description}</p>
-                </Card>
-              ))} 
-            </div>
-            <a
-              href="https://tally.so/r/3EvMVo"
-              target="_blank"
-              rel="noopener"
-            >
-              <Button size="lg" variant="primary">
-                Devenir sponsor
-              </Button>
-            </a>
+        <div className="container mx-auto flex h-full max-w-3xl flex-col items-center justify-center px-4 text-center">
+          <h2 className="mb-4 text-4xl font-bold">Soutenez le projet</h2>
+          <p className="mb-8 text-xl text-gray-500">
+            Devenez sponsor de O Mas La ? et contribuez à améliorer l'expérience
+            du carnaval pour tous. Votre soutien nous aidera à maintenir et
+            développer ce service gratuit.
+          </p>
+          {/* // Find the sponsorship section and update the benefits array */}
+          <div className="mb-12 grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: <Megaphone className="h-12 w-12 text-primary" />,
+                title: "Visibilité",
+                description: "Gagnez en visibilité pendant le carnaval",
+              },
+              {
+                icon: <Heart className="h-12 w-12 text-primary" />,
+                title: "Impact Social",
+                description: "Contribuez à un projet communautaire innovant",
+              },
+              {
+                icon: <Sparkles className="h-12 w-12 text-primary" />,
+                title: "Sur Mesure",
+                description: "Co-créez des expériences carnavalesques inédites",
+              },
+            ].map((item, index) => (
+              <Card
+                key={index}
+                className="p-6 text-center transition-shadow hover:shadow-lg"
+              >
+                <div className="mb-4 flex justify-center">{item.icon}</div>
+                <h3 className="mb-3 text-xl font-semibold">{item.title}</h3>
+                <p className="text-sm text-gray-400">{item.description}</p>
+              </Card>
+            ))}
+          </div>
+          <a href="https://tally.so/r/3EvMVo" target="_blank" rel="noopener">
+            <Button size="lg" variant="primary">
+              Devenir sponsor
+            </Button>
+          </a>
         </div>
       </section>
       {/* Footer */}
@@ -206,11 +219,15 @@ export default function HomePage() {
               <h3 className="mb-4 text-lg font-semibold">Légal</h3>
               <ul className="space-y-2">
                 <li>
-                  <Link href="/mentions-legales">Mentions légales</Link>
+                  <Link href="/mentions-legales">
+                    <Button variant="ghost">Mentions légales</Button>
+                  </Link>
                 </li>
                 <li>
                   <Link href="/politique-de-confidentialite">
-                    Politique de confidentialité
+                    <Button variant="ghost">
+                      Politique de confidentialité
+                    </Button>
                   </Link>
                 </li>
               </ul>
@@ -220,8 +237,19 @@ export default function HomePage() {
                 Application Carnavalier·e (à venir)
               </h3>
               <ul className="space-y-2">
-                <li>App Store</li>
-                <li>Google Play</li>
+                <li>
+                  <a
+                    href="https://apps.apple.com/fr/app/o-mas-la/id6740550162"
+                    target="_blank"
+                  >
+                    <Button variant="ghost">App Store</Button>
+                  </a>
+                </li>
+                <li>
+                  <Button variant="ghost" disabled>
+                    Google Play
+                  </Button>
+                </li>
               </ul>
             </div>
           </div>
