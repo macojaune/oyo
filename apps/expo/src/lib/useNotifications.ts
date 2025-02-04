@@ -85,7 +85,7 @@ export const useNotifications = () => {
         handleRegistrationError(`${e}`)
       }
     } else {
-      handleRegistrationError("Must use physical device for push notifications")
+      // handleRegistrationError("Must use physical device for push notifications")
       return "simulator"
     }
   }

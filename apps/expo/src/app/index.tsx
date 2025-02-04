@@ -36,7 +36,7 @@ export default function IntroScreen() {
             L'appli carnavalier·es
           </Text>
         </View>
-        <ScrollView className="p-5 pt-16">
+        <ScrollView className="p-5" contentContainerClassName="pb-16">
           <Text className="mb-8 text-center text-xl font-bold text-foreground">
             Bienvenue sur l'appli O Mas La ?
           </Text>

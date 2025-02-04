@@ -72,7 +72,7 @@ export const useLocationHandler = () => {
   // Cleanup function
   useEffect(() => {
     return () => {
-      void stopBackgroundTracking()
+      return void stopBackgroundTracking()
     }
   }, [])
   // Watch for changes in activeUsers
@@ -150,7 +150,7 @@ export const useLocationHandler = () => {
       if (success) {
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
           accuracy: Location.Accuracy.BestForNavigation,
-          timeInterval: 60 * 1000* 30,
+          timeInterval: 60 * 1000 * 30,
           distanceInterval: 50,
           foregroundService: {
             notificationTitle: "O Mas La ? - Partage de position",

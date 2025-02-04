@@ -13,7 +13,7 @@ export function Picker<T>({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<typeof RNPicker<T>>) {
-  const { colors } = useColorScheme()
+  const { colors, isDarkColorScheme } = useColorScheme()
   return (
     <View
       className={cn(
@@ -27,7 +27,6 @@ export function Picker<T>({
           style ?? {
             backgroundColor: colors.background,
             borderRadius: 10,
-            color: colors.foreground,
           }
         }
         dropdownIconColor={dropdownIconColor ?? colors.foreground}

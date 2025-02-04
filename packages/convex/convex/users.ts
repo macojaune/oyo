@@ -1,9 +1,6 @@
-import { Expo } from "expo-server-sdk"
 import { v } from "convex/values"
 
-import { Doc } from "../src"
-import { api } from "./_generated/api"
-import { action, mutation, query } from "./_generated/server"
+import { mutation, query } from "./_generated/server"
 
 export const create = mutation({
   args: { pushToken: v.string() },
@@ -27,7 +24,6 @@ export const startTracking = mutation({
       // Instead of throwing, return false to indicate we couldn't start tracking
       return false
     }
-
     // Set user as active for this group
     await ctx.db.patch(userId, {
       group,

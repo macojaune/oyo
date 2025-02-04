@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Image, Pressable, Text, View } from "react-native"
+import { Image, Platform, Pressable, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Stack } from "expo-router"
 import logoDarkImg from "assets/logo-dark.png"
@@ -53,7 +53,7 @@ export function TrackingStatus({
 
 export default function HomeScreen() {
   const [formVisible, toggleForm] = useState(false)
-  const { isDarkColorScheme } = useColorScheme()
+  const { isDarkColorScheme, colors } = useColorScheme()
 
   const { selectedGroup, setSelectedGroup, userId, setUserId } = useGroupStore()
   const { expoPushToken } = useNotifications()
@@ -71,6 +71,7 @@ export default function HomeScreen() {
   } = useLocationHandler()
 
   useEffect(() => {
+    console.log(userId, expoPushToken)
     if (!userId && expoPushToken) {
       createUser({ pushToken: expoPushToken })
         .then((newUserId) => {
@@ -113,6 +114,7 @@ export default function HomeScreen() {
                 <Picker
                   selectedValue={selectedGroup ?? undefined}
                   onValueChange={setSelectedGroup}
+                  selectionColor={colors.background}
                 >
                   {groups
                     ?.sort((a, b) => a.title.localeCompare(b.title))
@@ -121,7 +123,11 @@ export default function HomeScreen() {
                         label={group.title.toUpperCase()}
                         value={group._id}
                         key={group._id}
-                        className="text-background"
+                        style={{
+                          backgroundColor: colors.background,
+                          color: colors.foreground,
+                        }}
+                        color={colors.foreground}
                       />
                     ))}
                 </Picker>
