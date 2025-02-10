@@ -1,5 +1,11 @@
 # @oyo/nextjs
 
+## 1.4.1
+
+### Patch Changes
+
+- chore: updated analytics domain to macojaune.com
+
 ## 1.4.0
 
 ### Minor Changes

@@ -57,7 +57,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         )}
       >
         <Script
-          src="https://analytics.marvinl.com/script.js"
+          src="https://analytics.macojaune.com/script.js"
           data-website-id="638989fa-9ab3-4a30-b342-0c9d4103f87f"
           defer
         />
