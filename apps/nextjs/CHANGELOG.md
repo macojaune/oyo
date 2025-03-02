@@ -1,5 +1,15 @@
 # @oyo/nextjs
 
+## 1.5.0
+
+### Minor Changes
+
+- c4fc8cc: feat: add rci sponsor
+
+### Patch Changes
+
+- c4fc8cc: style: change light primary color
+
 ## 1.4.1
 
 ### Patch Changes
