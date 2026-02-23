@@ -24,7 +24,7 @@
   },
   "prettier": "@oyo/prettier-config",
   "dependencies": {
-    "convex": "^1.17.4",
+    "convex": "1.17.4",
     "expo-server-sdk": "^3.13.0"
   }
 }

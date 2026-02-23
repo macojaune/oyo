@@ -16,6 +16,7 @@ import type {
 import type * as groups from "../groups.js";
 import type * as positions from "../positions.js";
 import type * as sendNotifications from "../sendNotifications.js";
+import type * as stats from "../stats.js";
 import type * as users from "../users.js";
 
 /**
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   groups: typeof groups;
   positions: typeof positions;
   sendNotifications: typeof sendNotifications;
+  stats: typeof stats;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

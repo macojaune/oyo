@@ -17,6 +17,9 @@ export const env = createEnv({
    */
   server: {
     DB_URL: z.string().url(),
+    UMAMI_API_CLIENT_SECRET: z.string(),
+    UMAMI_API_CLIENT_ENDPOINT: z.string().url(),
+    UMAMI_WEBSITE_ID: z.string(),
   },
 
   /**
@@ -31,8 +34,6 @@ export const env = createEnv({
    */
   experimental__runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   skipValidation:
     !!process.env.CI || process.env.npm_lifecycle_event === "lint",
