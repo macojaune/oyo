@@ -1,29 +1,31 @@
 "use client"
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react"
+import { useQuery } from "convex/react"
 import mapboxgl from "mapbox-gl"
-import { useTheme } from "next-themes"
 
 import "mapbox-gl/dist/mapbox-gl.css"
 
-import { env } from "~/env"
+import { api as convexApi } from "@oyo/convex"
 
-mapboxgl.accessToken = env.NEXT_PUBLIC_MAPBOX_TOKEN ?? ""
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
 export interface HotspotMapRef {
   flyTo: (lat: number, lng: number) => void
 }
 
 interface HotspotMapProps {
-  hotspots: { lat: number; lng: number; count: number }[]
+  onHotspotsLoad?: (
+    hotspots: { lat: number; lng: number; count: number }[],
+  ) => void
 }
 
 export const HotspotMap = forwardRef<HotspotMapRef, HotspotMapProps>(
-  function HotspotMap({ hotspots }, ref) {
+  function HotspotMap({ onHotspotsLoad }, ref) {
     const mapContainer = useRef<HTMLDivElement>(null)
     const map = useRef<mapboxgl.Map | null>(null)
     const markersRef = useRef<mapboxgl.Marker[]>([])
-    const { resolvedTheme } = useTheme()
+    const hotspots = useQuery(convexApi.stats.getHotspots, { limit: 50 })
 
     useImperativeHandle(ref, () => ({
       flyTo: (lat: number, lng: number) => {
@@ -42,10 +44,7 @@ export const HotspotMap = forwardRef<HotspotMapRef, HotspotMapProps>(
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style:
-          resolvedTheme === "dark"
-            ? "mapbox://styles/mapbox/dark-v11"
-            : "mapbox://styles/mapbox/light-v11",
+        style: "mapbox://styles/mapbox/dark-v11",
         center: [-61.533329, 16.241935],
         zoom: 12,
       })
@@ -55,10 +54,14 @@ export const HotspotMap = forwardRef<HotspotMapRef, HotspotMapProps>(
       return () => {
         map.current?.remove()
       }
-    }, [resolvedTheme])
+    }, [])
 
     useEffect(() => {
-      if (!map.current || hotspots.length === 0) return
+      if (!map.current || !hotspots || hotspots.length === 0) return
+
+      if (onHotspotsLoad) {
+        onHotspotsLoad(hotspots)
+      }
 
       markersRef.current.forEach((marker) => {
         marker.remove()
@@ -89,14 +92,11 @@ export const HotspotMap = forwardRef<HotspotMapRef, HotspotMapProps>(
               `<div class="p-2"><strong>${spot.count}</strong> positions partagées</div>`,
             ),
           )
-
-        if (map.current) {
-          marker.addTo(map.current)
-        }
+          .addTo(map.current!)
 
         markersRef.current.push(marker)
       })
-    }, [hotspots])
+    }, [hotspots, onHotspotsLoad])
 
     return (
       <div

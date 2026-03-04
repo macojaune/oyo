@@ -1,6 +1,6 @@
 import { env } from "~/env"
 
-export type UmamiStats = {
+export interface UmamiStats {
   pageviews: { value: number; prev: number }
   visitors: { value: number; prev: number }
   visits: { value: number; prev: number }
@@ -8,9 +8,14 @@ export type UmamiStats = {
   totaltime: { value: number; prev: number }
 }
 
-export type UmamiMetric = {
+export interface UmamiMetric {
   x: string
   y: number
+}
+
+export interface UmamiDailyPoint {
+  date: string
+  count: number
 }
 
 async function umamiFetch<T>(
@@ -67,6 +72,28 @@ export async function getWebsiteMetrics(
     limit,
   })
   return result ?? []
+}
+
+export async function getWebsitePageviews(
+  startAt: number,
+  endAt: number,
+): Promise<UmamiDailyPoint[]> {
+  const result = await umamiFetch<{
+    pageviews?: { t?: string; x?: string; y: number }[]
+  }>("/pageviews", {
+    startAt,
+    endAt,
+    unit: "day",
+    timezone: "America/Guadeloupe",
+  })
+
+  const points = result?.pageviews ?? []
+  return points
+    .map((point) => ({
+      date: point.t ?? point.x ?? "",
+      count: point.y,
+    }))
+    .filter((point) => point.date.length > 0)
 }
 
 export const PERIODS = {

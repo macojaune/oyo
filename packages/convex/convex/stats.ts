@@ -2,11 +2,29 @@ import { v } from "convex/values"
 
 import { query } from "./_generated/server"
 
+const periodArgs = {
+  startAt: v.optional(v.number()),
+  endAt: v.optional(v.number()),
+}
+
+function inPeriod(
+  creationTime: number,
+  startAt?: number,
+  endAt?: number,
+): boolean {
+  if (startAt !== undefined && creationTime < startAt) return false
+  if (endAt !== undefined && creationTime > endAt) return false
+  return true
+}
+
 export const getStats = query({
-  args: {},
-  handler: async (ctx) => {
+  args: periodArgs,
+  handler: async (ctx, { startAt, endAt }) => {
     const groups = await ctx.db.query("groups").collect()
-    const positions = await ctx.db.query("positions").collect()
+    const allPositions = await ctx.db.query("positions").collect()
+    const positions = allPositions.filter((p) =>
+      inPeriod(p._creationTime, startAt, endAt),
+    )
 
     const appPositions = positions.filter((p) => p.fromApp).length
     const webPositions = positions.length - appPositions
@@ -25,9 +43,12 @@ export const getStats = query({
 })
 
 export const getTopGroups = query({
-  args: { limit: v.optional(v.number()) },
-  handler: async (ctx, { limit = 10 }) => {
-    const positions = await ctx.db.query("positions").collect()
+  args: { limit: v.optional(v.number()), ...periodArgs },
+  handler: async (ctx, { limit = 10, startAt, endAt }) => {
+    const allPositions = await ctx.db.query("positions").collect()
+    const positions = allPositions.filter((p) =>
+      inPeriod(p._creationTime, startAt, endAt),
+    )
 
     const groupCounts: Record<string, { count: number; title: string }> = {}
 
@@ -55,9 +76,12 @@ export const getTopGroups = query({
 })
 
 export const getHotspots = query({
-  args: { limit: v.optional(v.number()) },
-  handler: async (ctx, { limit = 20 }) => {
-    const positions = await ctx.db.query("positions").collect()
+  args: { limit: v.optional(v.number()), ...periodArgs },
+  handler: async (ctx, { limit = 20, startAt, endAt }) => {
+    const allPositions = await ctx.db.query("positions").collect()
+    const positions = allPositions.filter((p) =>
+      inPeriod(p._creationTime, startAt, endAt),
+    )
 
     const gridCounts: Record<
       string,
@@ -89,9 +113,12 @@ export const getHotspots = query({
 })
 
 export const getActivityByHour = query({
-  args: {},
-  handler: async (ctx) => {
-    const positions = await ctx.db.query("positions").collect()
+  args: periodArgs,
+  handler: async (ctx, { startAt, endAt }) => {
+    const allPositions = await ctx.db.query("positions").collect()
+    const positions = allPositions.filter((p) =>
+      inPeriod(p._creationTime, startAt, endAt),
+    )
 
     const hourCounts: Record<number, number> = {}
     for (let i = 0; i < 24; i++) {
@@ -100,7 +127,7 @@ export const getActivityByHour = query({
 
     for (const pos of positions) {
       const hour = new Date(pos._creationTime).getHours()
-      hourCounts[hour]++
+      hourCounts[hour] = (hourCounts[hour] ?? 0) + 1
     }
 
     return Object.entries(hourCounts).map(([hour, count]) => ({
@@ -111,14 +138,40 @@ export const getActivityByHour = query({
 })
 
 export const getActivityByDay = query({
-  args: {},
-  handler: async (ctx) => {
-    const positions = await ctx.db.query("positions").collect()
+  args: periodArgs,
+  handler: async (ctx, { startAt, endAt }) => {
+    const allPositions = await ctx.db.query("positions").collect()
+    const positions = allPositions.filter((p) =>
+      inPeriod(p._creationTime, startAt, endAt),
+    )
 
     const dayCounts: Record<string, number> = {}
 
     for (const pos of positions) {
-      const day = new Date(pos._creationTime).toISOString().split("T")[0]
+      const iso = new Date(pos._creationTime).toISOString()
+      const day = iso.split("T")[0] ?? iso
+      dayCounts[day] = (dayCounts[day] ?? 0) + 1
+    }
+
+    return Object.entries(dayCounts)
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+  },
+})
+
+export const getGroupCreationsByDay = query({
+  args: periodArgs,
+  handler: async (ctx, { startAt, endAt }) => {
+    const allGroups = await ctx.db.query("groups").collect()
+    const groups = allGroups.filter((group) =>
+      inPeriod(group._creationTime, startAt, endAt),
+    )
+
+    const dayCounts: Record<string, number> = {}
+
+    for (const group of groups) {
+      const iso = new Date(group._creationTime).toISOString()
+      const day = iso.split("T")[0] ?? iso
       dayCounts[day] = (dayCounts[day] ?? 0) + 1
     }
 
